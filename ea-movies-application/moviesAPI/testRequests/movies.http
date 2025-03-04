@@ -1,0 +1,55 @@
+### GET A MOVIE PAGE
+GET http://localhost:8090/movies/?pageSize=20&pageNumber=0
+
+### GET A WRONG MOVIE PAGE NUMBER
+GET http://localhost:8090/movies/?pageSize=20&pageNumber=23098
+
+### GET A PAGE WITH WRONG TOO BIG OF PAGE SIZE
+GET http://localhost:8090/movies/?pageSize=12022598209&pageNumber=0
+
+### GET MOVIE BY ID
+GET http://localhost:8090/movies/aff16a97-7248-46c5-be48-5cd261cdf46e
+
+#docker run --rm --name postgres -p 5433:5432 -e POSTGRES_PASSWORD=123 postgres
+
+### CREATE A NEW MOVIE
+POST http://localhost:8090/movies/
+
+Content-Type: application/json
+
+{
+  "title": "idk",
+  "releaseYear": "2019-01-01",
+  "overview": "i don't give a shit",
+  "metaScore": 10,
+  "certificate": "A",
+  "runtime": 132,
+  "genre": "Comedy, Drama, Thriller",
+  "imdbRating": 8.6,
+  "revenue": 5.336784,
+  "director_id":"7d42b24f-6cf8-4552-8219-3d35ece9e222"
+}
+
+### UPDATE MOVIE BY ID
+PUT http://localhost:8090/movies/aff16a97-7248-46c5-be48-5cd261cdf46e
+Content-Type: application/json
+
+{
+  "title": "idk",
+  "releaseYear": "2019-01-01",
+  "overview": "i don't give a shit",
+  "metaScore": 10,
+  "certificate": "A",
+  "runtime": 132,
+  "genre": "Comedy, Drama, Thriller",
+  "imdbRating": 8.6,
+  "revenue": 5.336784,
+  "director_id":"e2ab2df4-dce8-4bb1-a7d6-50e033ba4b8b"
+}
+
+### DELETE MOVIE BY ID
+DELETE http://localhost:8090/movies/05fded13-ebdd-47f5-8830-81700c7f039d
+
+
+### GET TOP MOVIES BY REVENUE
+GET http://localhost:8090/movies/topMoviesByRevenueWithFilter?top_n=200&genre=Comedy
