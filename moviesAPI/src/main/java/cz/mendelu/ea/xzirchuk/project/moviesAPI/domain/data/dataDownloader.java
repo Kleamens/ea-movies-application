@@ -37,21 +37,28 @@ public class dataDownloader {
 
     private final MovieService movieService;
 
+    private final int MOVIE_TITLE = 0;
+    private final int MOVIE_YEAR = 1;
+    private final int MOVIE_CERTIFICATE = 2;
+    private final int MOVIE_RUNTIME = 3;
+    private final int MOVIE_GENRE = 4;
+    private final int MOVIE_IMDB_RATING = 5;
+    private final int MOVIE_OVERVIEW = 6;
+    private final int MOVIE_META_SCORE = 7;
+    private final int DIRECTOR_NAME = 8;
+
+
     @Autowired
-    public dataDownloader(MovieService movieService,DirectorService directorService){
+    public dataDownloader(MovieService movieService, DirectorService directorService) {
         this.directorService = directorService;
         this.movieService = movieService;
     }
 
 
-
-    public void downloadData(){
+    public void downloadData() {
         URL resourceRelativePath = dataDownloader.class.getResource("/data/imdb_top_1000.csv");
         assert resourceRelativePath != null;
         File CSVFile = new File(resourceRelativePath.getFile());
-
-
-
 
 
         try {
@@ -69,53 +76,53 @@ public class dataDownloader {
             // we are going to read data line by line
             while ((nextRecord = csvReader.readNext()) != null) {
 
-                if(isFirstRecord){
-                    isFirstRecord=false;
+                if (isFirstRecord) {
+                    isFirstRecord = false;
                     continue;
                 }
                 Movie insertMovie = new Movie();
                 Director director = new Director();
                 List<String> params = new ArrayList<String>();
-                for (int i = 1; i<nextRecord.length; i++) {
+                for (int i = 1; i < nextRecord.length; i++) {
                     params.add(nextRecord[i]);
                 }
-                logger.debug("### Parameters ### {}",params);
-                insertMovie.setTitle(params.get(0));
+                logger.debug("### Parameters ### {}", params);
+                insertMovie.setTitle(params.get(MOVIE_TITLE));
                 insertMovie.setReleaseYear(
                         LocalDate.ofYearDay(
                                 Integer.parseInt(
-                                        params.get(1)
+                                        params.get(MOVIE_YEAR)
                                 ),
                                 1)
                 );
                 insertMovie.setCertificate(
-                        ((params.get(2).isEmpty())? "Unknown" : params.get(2))
+                        ((params.get(MOVIE_CERTIFICATE).isEmpty()) ? "Unknown" : params.get(MOVIE_CERTIFICATE))
                 );
                 insertMovie.setRuntime(Integer.parseInt(
-                    params.get(3).split(" ")[0]
-                 )
+                                params.get(MOVIE_RUNTIME).split(" ")[0]
+                        )
                 );
-                insertMovie.setGenre(params.get(4)
-                        .replace(" ",""));
+                insertMovie.setGenre(params.get(MOVIE_GENRE)
+                        .replace(" ", ""));
                 insertMovie.setImdbRating(Float.parseFloat(
-                        params.get(5)
-                )
+                                params.get(MOVIE_IMDB_RATING)
+                        )
                 );
-                insertMovie.setOverview(params.get(6));
+                insertMovie.setOverview(params.get(MOVIE_OVERVIEW));
                 insertMovie.setMetaScore(
-                        (!params.get(7).isEmpty()? Integer.parseInt(params.get(7)): generator.nextInt(0,100)));
-                if (directorService.findDirectorByName(params.get(8)).isPresent()){
-                    director = directorService.findDirectorByName(params.get(8)).get();
+                        (!params.get(MOVIE_META_SCORE).isEmpty() ? Integer.parseInt(params.get(MOVIE_META_SCORE)) : generator.nextInt(0, 100)));
+                if (directorService.findDirectorByName(params.get(DIRECTOR_NAME)).isPresent()) {
+                    director = directorService.findDirectorByName(params.get(DIRECTOR_NAME)).get();
                     logger.info("### Director ### {}", director);
-                }else{
-                    director.setName(params.get(8));
-                    director.setNet_worth(generator.nextFloat(1f,10f));
+                } else {
+                    director.setName(params.get(DIRECTOR_NAME));
+                    director.setNet_worth(generator.nextFloat(1f, 10f));
                     directorService.createDirector(director);
                 }
 
-                String lastItem = params.get(params.size()-1);
+                String lastItem = params.get(params.size() - 1);
                 insertMovie.setRevenue(
-                        ((!lastItem.isEmpty()) ? Float.parseFloat(params.get(params.size()-1).replace(",","")) : null
+                        ((!lastItem.isEmpty()) ? Float.parseFloat(params.get(params.size() - 1).replace(",", "")) : null
                         )
                 );
                 insertMovie.setLastModified(Instant.now());
@@ -124,17 +131,16 @@ public class dataDownloader {
                 movieService.createMovie(insertMovie);
 
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
     @PostConstruct
-    public void dow(){
+    public void dow() {
 
-            downloadData();
+        downloadData();
     }
 
 
