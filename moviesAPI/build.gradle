@@ -51,8 +51,8 @@ flyway {
     url = 'jdbc:postgresql://localhost:5432/postgres'
     user = 'postgres'
     password = '123'
-    schemas = ['default_schema']
-    defaultSchema = 'default_schema'
+    schemas = ['public']
+
 
 
 }
