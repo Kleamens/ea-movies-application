@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
         description = "Manages the CRUD opeation on the movie entites with addition of other manipulation with the movies in the db"
 )
 public class MovieContoller {
-
+    private final Logger logger = LoggerFactory.getLogger(MovieContoller.class);
     private  final MovieService movieService;
     private final DirectorService directorService;
 
@@ -208,7 +210,7 @@ public class MovieContoller {
         try{
             filtered_movies=filtered_movies.subList(0,Integer.parseInt(top_n));
         }catch (IndexOutOfBoundsException e){
-            System.out.println("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
+            logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
         }catch (NumberFormatException e){
             throw  new BadInputException();
         }
@@ -250,7 +252,7 @@ public class MovieContoller {
         try{
             filtered_movies=filtered_movies.subList(0,Integer.parseInt(top_n));
         }catch (IndexOutOfBoundsException e){
-            System.out.println("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
+            logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
         }catch (NumberFormatException e){
             throw  new BadInputException();
         }

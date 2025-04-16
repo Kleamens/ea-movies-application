@@ -9,6 +9,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.Range;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileReader;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -27,11 +30,9 @@ import java.util.random.RandomGenerator;
 
 
 @Service
-@NoArgsConstructor(force = true)
-@AllArgsConstructor
 public class dataDownloader {
 
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final DirectorService directorService;
 
     private final MovieService movieService;
@@ -45,13 +46,19 @@ public class dataDownloader {
 
 
     public void downloadData(){
-        String filename ="C:\\Users\\Person\\Desktop\\ea_git\\ea_ls2023-2024_xzirchuk\\moviesAPI\\src\\main\\java\\cz\\mendelu\\ea\\xzirchuk\\project\\moviesAPI\\domain\\data\\imdb_top_1000.csv";
+        URL resourceRelativePath = dataDownloader.class.getResource("/data/imdb_top_1000.csv");
+        assert resourceRelativePath != null;
+        File CSVFile = new File(resourceRelativePath.getFile());
+
+
+
+
 
         try {
 
             // Create an object of filereader
             // class with CSV file as a parameter.
-            FileReader filereader = new FileReader(filename);
+            FileReader filereader = new FileReader(CSVFile);
 
             // create csvReader object passing
             // file reader as a parameter
@@ -72,7 +79,7 @@ public class dataDownloader {
                 for (int i = 1; i<nextRecord.length; i++) {
                     params.add(nextRecord[i]);
                 }
-                System.out.println(params);
+                logger.debug("### Parameters ### {}",params);
                 insertMovie.setTitle(params.get(0));
                 insertMovie.setReleaseYear(
                         LocalDate.ofYearDay(
@@ -99,7 +106,7 @@ public class dataDownloader {
                         (!params.get(7).isEmpty()? Integer.parseInt(params.get(7)): generator.nextInt(0,100)));
                 if (directorService.findDirectorByName(params.get(8)).isPresent()){
                     director = directorService.findDirectorByName(params.get(8)).get();
-                    System.out.println("##########"+directorService.findDirectorByName(params.get(8)).get());
+                    logger.info("### Director ### {}", director);
                 }else{
                     director.setName(params.get(8));
                     director.setNet_worth(generator.nextFloat(1f,10f));
@@ -116,7 +123,6 @@ public class dataDownloader {
 
                 movieService.createMovie(insertMovie);
 
-                System.out.println();
             }
         }
         catch (Exception e) {
@@ -128,7 +134,7 @@ public class dataDownloader {
     @PostConstruct
     public void dow(){
 
-//            downloadData();
+            downloadData();
     }
 
 

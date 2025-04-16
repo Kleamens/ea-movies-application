@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +36,8 @@ import java.util.UUID;
         description = "Manages the CRUD opeation on the director entites with addition of other manipulation with the directors in the db"
 )
 public class DirectorContoller {
+    private final Logger logger = LoggerFactory.getLogger(DirectorContoller.class);
+
     private final DirectorService directorService;
     private final MovieService movieService;
 
@@ -171,7 +175,7 @@ public class DirectorContoller {
         try{
             directors.subList(0,Integer.parseInt(top_n));
         }catch (IndexOutOfBoundsException e){
-            System.out.println("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
+            logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
         }catch (NumberFormatException e){
             throw new BadInputException();
         }
