@@ -3,7 +3,6 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director;
 
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.*;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.response.ArrayResponse;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.response.ObjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -59,19 +58,19 @@ public class DirectorContoller {
             @ApiResponse(responseCode = "200", description = "A list of directors"),
             @ApiResponse(responseCode = "400",description = "Wrong input found in page number or size parameters"),
     })
-    public ArrayResponse<DirectorResponse> getDirectorsPage(@RequestParam String pageNumber,
-                                                            @RequestParam String pageSize){
+    public DirectorsResponse getDirectorsPage(@RequestParam int pageNumber,
+                                                            @RequestParam int pageSize){
         List<Director> directors = new ArrayList<>();
         try {
             directors = directorService.getDirectorPage(
-                    Integer.parseInt(pageNumber)
-                    , Integer.parseInt(pageSize));
+                    pageNumber
+                    , pageSize);
         } catch (NumberFormatException e) {
             throw new BadInputException();
         }
 
 
-        return ArrayResponse.of(directors, DirectorResponse::new);
+        return new  DirectorsResponse(directors);
     }
 
     @GetMapping(value = "/{id}",produces = "application/json")
@@ -163,19 +162,13 @@ public class DirectorContoller {
             @ApiResponse(responseCode = "200", description = "List of n directors sorted by networth"),
             @ApiResponse(responseCode = "400",description = "Wrong input in paramters"),
     })
-    public ArrayResponse<DirectorResponse> getProducersByNetWorth(
-            @RequestParam String top_n
+    public DirectorsResponse getProducersByNetWorth(
+            @RequestParam int top_n
     ){
         var directors =directorService.getAllDirectors();
         directorService.sortDirectorsByNetWorth(directors);
-        try{
-            directors.subList(0,Integer.parseInt(top_n));
-        }catch (IndexOutOfBoundsException e){
-            logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
-        }catch (NumberFormatException e){
-            throw new BadInputException();
-        }
-        return ArrayResponse.of(directors,DirectorResponse::new);
+        directors = directorService.getTopNDirectors(top_n,directors);
+        return new DirectorsResponse(directors);
     }
 
     @ExceptionHandler(BadInputException.class)
@@ -191,11 +184,6 @@ public class DirectorContoller {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity exceptionDirectorNotFound(NotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Director not found",NOT_FOUND);
-        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
-    }
-    @ExceptionHandler(IndexOutOfBoundsException.class)
-    public ResponseEntity exceptionIndexOutOfBounds(IndexOutOfBoundsException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Chosen index is out of range",REQUESTED_RANGE_NOT_SATISFIABLE);
         return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
     }
 

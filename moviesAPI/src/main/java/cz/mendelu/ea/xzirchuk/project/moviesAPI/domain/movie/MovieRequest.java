@@ -18,7 +18,6 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@EqualsAndHashCode
 public class MovieRequest {
 
 

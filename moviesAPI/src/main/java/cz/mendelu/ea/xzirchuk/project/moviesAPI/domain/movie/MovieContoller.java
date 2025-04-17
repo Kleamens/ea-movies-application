@@ -3,8 +3,8 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.AlreadyExistsException;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
+import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.ErrorResponse;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.NotFoundException;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.response.ArrayResponse;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.response.ObjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.stream.Collectors;;
+import java.util.stream.Collectors;;import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
 
 @RestController()
 @RequestMapping("movies")
@@ -56,12 +58,12 @@ public class MovieContoller {
             @ApiResponse(responseCode = "400",description = "Either the value in page number or page size parametrs negative or not integers"),
             @ApiResponse(responseCode = "404",description = "The resulting list of movies is empty , most likely because the page number is too high")
     })
-    public ArrayResponse<MovieResponse> getMoviesPage(@RequestParam String pageNumber,@RequestParam String pageSize) {
+    public MoviesResponse getMoviesPage(@RequestParam int pageNumber,@RequestParam int pageSize) {
         List<Movie> movies = new ArrayList<>();
         try {
             movies = movieService.getMoviePage(
-                    Integer.parseInt(pageNumber)
-                    , Integer.parseInt(pageSize));
+                    pageNumber
+                    , pageSize);
         } catch (NumberFormatException e) {
             throw new BadInputException();
 
@@ -71,7 +73,7 @@ public class MovieContoller {
             throw new NotFoundException();
         }
 
-        return ArrayResponse.of(movies, MovieResponse::new);
+        return new MoviesResponse(movies);
     }
 
     @Valid
@@ -180,18 +182,12 @@ public class MovieContoller {
             @ApiResponse(responseCode = "200", description = "A list of movies sorted by revenue with filters"),
             @ApiResponse(responseCode = "404",description = "No movies satisfying the filters found"),
     })
-    public ArrayResponse<MovieResponse> getMoviePageWithFilter(
-            @RequestParam String top_n,
+    public MoviesResponse getMoviePageWithFilter(
+            @RequestParam int top_n,
             @RequestParam(required = false) String director_name,
             @RequestParam(required = false) List<String> genre,
             @RequestParam(required = false) String year
             ){
-        var top_n_number = 0;
-        try{
-             top_n_number = Integer.parseInt(top_n);
-        }catch (NumberFormatException e){
-            throw new BadInputException();
-        }
         var filtered_movies = movieService.filterMoviesByParamters(
                 director_name,
                 year!=null?LocalDate.parse(year):null,
@@ -200,8 +196,8 @@ public class MovieContoller {
 //sorting by revenue
         movieService.sortMoviesByRevenue(filtered_movies);
 //getting first n results
-        filtered_movies = movieService.getTopNMovies(top_n_number,filtered_movies);
-        return ArrayResponse.of(filtered_movies,MovieResponse::new);
+        filtered_movies = movieService.getTopNMovies(top_n,filtered_movies);
+        return new MoviesResponse(filtered_movies);
     }
     @GetMapping(value = "/topMoviesByImdbWithFilter", produces = "application/json")
     @Operation(
@@ -212,18 +208,12 @@ public class MovieContoller {
             @ApiResponse(responseCode = "200", description = "A list of movies sorted by imdb rating with filters"),
             @ApiResponse(responseCode = "404",description = "No movies satisfying the filters found"),
     })
-    public ArrayResponse<MovieResponse> getMoviePageByImdbWithFilter(
-            @RequestParam String top_n,
+    public MoviesResponse getMoviePageByImdbWithFilter(
+            @RequestParam int top_n,
             @RequestParam(required = false) String director_name,
             @RequestParam(required = false) List<String> genre,
             @RequestParam(required = false) String year
     ){
-        var top_n_number = 0;
-        try{
-            top_n_number = Integer.parseInt(top_n);
-        }catch (NumberFormatException e){
-            throw new BadInputException();
-        }
 //        filtering by req params
         var filtered_movies = movieService.filterMoviesByParamters(
                 director_name,
@@ -233,8 +223,8 @@ public class MovieContoller {
 //sorting by revenue
         movieService.sortMoviesByImdbRating(filtered_movies);
 //getting first n results
-        filtered_movies = movieService.getTopNMovies(top_n_number,filtered_movies);
-        return ArrayResponse.of(filtered_movies,MovieResponse::new);
+        filtered_movies = movieService.getTopNMovies(top_n,filtered_movies);
+        return new MoviesResponse(filtered_movies);
     }
     //suporting methods
     public void doesMoviesAlreadyExist(Movie movie){
@@ -247,4 +237,21 @@ public class MovieContoller {
             throw new AlreadyExistsException();
         }
     }
+
+    @ExceptionHandler(BadInputException.class)
+    public ResponseEntity BadInputExceptionDirector(final BadInputException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Erroneous input when searching for movie",BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
+    }
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity exceptionDirectorExists(AlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Movie already exists",CONFLICT);
+        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
+    }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity exceptionDirectorNotFound(NotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Movie not found",NOT_FOUND);
+        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
+    }
+
 }

@@ -34,5 +34,5 @@ Content-Type: application/json
 DELETE http://localhost:8080/directors/00eb7a7e-6145-4dd2-b74b-30f799e6d32f
 
 
-### GET TOP MOVIES BY REVENUE
+### GET TOP Directors BY net_worth
 GET http://localhost:8080/directors/directorsByNetWorth?top_n=6
