@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -177,28 +178,26 @@ public class DirectorContoller {
         return ArrayResponse.of(directors,DirectorResponse::new);
     }
 
+    @ExceptionHandler(BadInputException.class)
+    public ResponseEntity BadInputExceptionDirector(final BadInputException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Erroneous input when searching for director",BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
+    }
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity exceptionDirectorExists(AlreadyExistsException ex) {
-        return new ResponseEntity<>("a", CONFLICT);
+        ErrorResponse errorResponse = new ErrorResponse("Director already exists",CONFLICT);
+        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
     }
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity exceptionDirectorNotFound(NotFoundException ex) {
-        return new ResponseEntity<>("b",NOT_FOUND);
+        ErrorResponse errorResponse = new ErrorResponse("Director not found",NOT_FOUND);
+        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
     }
     @ExceptionHandler(IndexOutOfBoundsException.class)
     public ResponseEntity exceptionIndexOutOfBounds(IndexOutOfBoundsException ex) {
-        return new ResponseEntity<>("c",MOVED_PERMANENTLY);
+        ErrorResponse errorResponse = new ErrorResponse("Chosen index is out of range",REQUESTED_RANGE_NOT_SATISFIABLE);
+        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
     }
-
-    @ExceptionHandler(AlreadyExistsException.class)
-    public ResponseEntity exceptionDirectorAlreadyExists(AlreadyExistsException ex) {
-        return new ResponseEntity<>("d",UPGRADE_REQUIRED);
-    }
-    @ExceptionHandler(BadInputException.class)
-    public ResponseEntity BadInputExceptionDirector(final BadInputException ex) {
-        return new ResponseEntity<>("g",BAD_REQUEST);
-    }
-
 
 
 }
