@@ -1,15 +1,12 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.ToString;
 
 import java.time.Instant;
 import java.time.LocalDate;

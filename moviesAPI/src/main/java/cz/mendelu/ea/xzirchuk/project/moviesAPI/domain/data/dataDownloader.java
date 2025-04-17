@@ -6,27 +6,19 @@ import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService;
 import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
-import java.util.random.RandomGenerator;
 
 
 @Service

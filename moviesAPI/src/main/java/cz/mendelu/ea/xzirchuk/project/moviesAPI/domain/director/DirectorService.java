@@ -1,12 +1,15 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director;
 
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MoviePaginationRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.Comparator;
+import java.util.Collections;
 
 @Service
 public class DirectorService {

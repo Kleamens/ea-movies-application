@@ -1,18 +1,11 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie;
 
 
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorRepository;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.lang.management.MonitorInfo;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Service

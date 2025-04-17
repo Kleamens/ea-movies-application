@@ -1,12 +1,8 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie;
 
 
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.NotFoundException;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -15,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.hibernate.validator.constraints.Normalized;
 
 import java.time.Instant;
 import java.time.LocalDate;

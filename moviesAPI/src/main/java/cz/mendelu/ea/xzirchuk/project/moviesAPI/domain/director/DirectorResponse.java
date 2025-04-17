@@ -1,15 +1,10 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director;
 
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieResponse;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
