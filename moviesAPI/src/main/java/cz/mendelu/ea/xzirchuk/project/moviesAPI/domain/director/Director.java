@@ -17,8 +17,8 @@ import java.util.UUID;
 
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Director {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

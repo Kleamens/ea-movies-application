@@ -15,7 +15,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 @Data
-@AllArgsConstructor
 public class MovieResponse {
     @Id
 

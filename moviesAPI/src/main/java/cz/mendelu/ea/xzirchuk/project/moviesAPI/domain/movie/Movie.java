@@ -20,7 +20,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@EqualsAndHashCode
 public class Movie {
 
     @Id
