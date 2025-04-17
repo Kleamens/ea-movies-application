@@ -8,25 +8,23 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.rmi.AlreadyBoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
 @RequestMapping("directors")
@@ -110,7 +108,6 @@ public class DirectorContoller {
     }
 
     @PutMapping(value = "/{id}",produces = "application/json")
-    @Valid
     @ResponseStatus(HttpStatus.ACCEPTED)
     @Transactional
     @Operation(
@@ -171,7 +168,7 @@ public class DirectorContoller {
         return new DirectorsResponse(directors);
     }
 
-    @ExceptionHandler(BadInputException.class)
+    @ExceptionHandler({BadInputException.class})
     public ResponseEntity BadInputExceptionDirector(final BadInputException ex) {
         ErrorResponse errorResponse = new ErrorResponse("Erroneous input when searching for director",BAD_REQUEST);
         return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
@@ -186,6 +183,5 @@ public class DirectorContoller {
         ErrorResponse errorResponse = new ErrorResponse("Director not found",NOT_FOUND);
         return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
     }
-
 
 }

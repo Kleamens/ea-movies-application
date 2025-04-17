@@ -25,8 +25,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.stream.Collectors;;import static org.springframework.http.HttpStatus.*;
+
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController()
 @RequestMapping("movies")
@@ -48,7 +51,6 @@ public class MovieContoller {
     }
 
     @GetMapping(value = "/",produces = "application/json")
-    @Valid
     @Operation(
             summary = "Get movies",
             description = "Get movies with pagination with parameters representing desire page number and page size(amount of movies displayed simultaneously"
@@ -110,7 +112,6 @@ public class MovieContoller {
         return  ObjectResponse.of(movie,MovieResponse::new);
     }
 
-    @Valid
     @GetMapping(value = "/{id}",produces = "application/json")
     @Operation(
             summary = "Get movie",
@@ -130,7 +131,6 @@ public class MovieContoller {
 
     @PutMapping(value = "/{id}", produces = "application/json")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @Valid
     @Transactional
     @Operation(
             summary = "Update movie",

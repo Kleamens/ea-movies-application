@@ -8,7 +8,10 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsExclude;
 import org.apache.commons.lang3.builder.HashCodeExclude;
 
@@ -16,9 +19,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
 public class Movie {
 
@@ -69,7 +73,6 @@ public class Movie {
 
     @ManyToOne()
     @JoinColumn(name = "director_id")
-    @ToString.Exclude
     @JsonIgnore
     Director director;
 

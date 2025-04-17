@@ -1,6 +1,5 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director;
 
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieContoller;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
 import org.slf4j.Logger;
