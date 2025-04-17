@@ -39,9 +39,7 @@ public class Director {
     private Float net_worth;
 
     @OneToMany(mappedBy = "director",cascade = CascadeType.REMOVE)
-    @ToString.Exclude
     @JsonIgnore
-
     List<Movie> movieList;
 
 //todo find director by name

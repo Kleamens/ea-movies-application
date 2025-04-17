@@ -2,9 +2,7 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director;
 
 
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.AlreadyExistsException;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.NotFoundException;
+import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.*;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.response.ArrayResponse;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.response.ObjectResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,22 +15,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
 import java.rmi.AlreadyBoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("directors")
@@ -62,7 +56,6 @@ public class DirectorContoller {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "A list of directors"),
-            @ApiResponse(responseCode = "404",description = "No directors found , most likely page number too high"),
             @ApiResponse(responseCode = "400",description = "Wrong input found in page number or size parameters"),
     })
     public ArrayResponse<DirectorResponse> getDirectorsPage(@RequestParam String pageNumber,
@@ -76,14 +69,10 @@ public class DirectorContoller {
             throw new BadInputException();
         }
 
-        if (directors.isEmpty()) {
-            throw new NotFoundException();
-        }
 
         return ArrayResponse.of(directors, DirectorResponse::new);
     }
 
-    @Valid
     @GetMapping(value = "/{id}",produces = "application/json")
     @Operation(
             summary = "Get director by id",
@@ -187,5 +176,29 @@ public class DirectorContoller {
         }
         return ArrayResponse.of(directors,DirectorResponse::new);
     }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity exceptionDirectorExists(AlreadyExistsException ex) {
+        return new ResponseEntity<>("a", CONFLICT);
+    }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity exceptionDirectorNotFound(NotFoundException ex) {
+        return new ResponseEntity<>("b",NOT_FOUND);
+    }
+    @ExceptionHandler(IndexOutOfBoundsException.class)
+    public ResponseEntity exceptionIndexOutOfBounds(IndexOutOfBoundsException ex) {
+        return new ResponseEntity<>("c",MOVED_PERMANENTLY);
+    }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity exceptionDirectorAlreadyExists(AlreadyExistsException ex) {
+        return new ResponseEntity<>("d",UPGRADE_REQUIRED);
+    }
+    @ExceptionHandler(BadInputException.class)
+    public ResponseEntity BadInputExceptionDirector(final BadInputException ex) {
+        return new ResponseEntity<>("g",BAD_REQUEST);
+    }
+
+
 
 }

@@ -1,19 +1,19 @@
 ### GET A DIRECTOR PAGE
-GET http://localhost:8090/directors/?pageSize=20&pageNumber=0
+GET http://localhost:8080/directors/?pageSize=20&pageNumber=0
 
 ### GET A WRONG DIRECTOR PAGE NUMBER
-GET http://localhost:8090/directors/?pageSize=20&pageNumber=23098
+GET http://localhost:8080/directors/?pageSize=20&pageNumber=23098
 
 ### GET A PAGE WITH WRONG TOO BIG OF PAGE SIZE
-GET http://localhost:8090/directors/?pageSize=12022598209&pageNumber=0
+GET http://localhost:8080/directors/?pageSize=12022598209&pageNumber=0
 
 ### GET DIRECTOR BY ID
-GET http://localhost:8090/directors/00135d3a-a528-4637-ba78-87204e18e5e8
+GET http://localhost:8080/directors/00135d3a-a528-4637-ba78-87204e18e5e8
 
 #docker run --rm --name postgres -p 5433:5432 -e POSTGRES_PASSWORD=123 postgres
 
 ### CREATE A NEW DIRECTOR
-POST http://localhost:8090/directors/
+POST http://localhost:8080/directors/
 Content-Type: application/json
 
 {
@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 ### UPDATE DIRECTOR BY ID
-PUT http://localhost:8090/directors/00eb7a7e-6145-4dd2-b74b-30f799e6d32f
+PUT http://localhost:8080/directors/00eb7a7e-6145-4dd2-b74b-30f799e6d32f
 Content-Type: application/json
 
 {
@@ -31,8 +31,8 @@ Content-Type: application/json
 }
 
 ### DELETE DIRECTOR BY ID
-DELETE http://localhost:8090/directors/00eb7a7e-6145-4dd2-b74b-30f799e6d32f
+DELETE http://localhost:8080/directors/00eb7a7e-6145-4dd2-b74b-30f799e6d32f
 
 
 ### GET TOP MOVIES BY REVENUE
-GET http://localhost:8090/directors/directorsByNetWorth?top_n=6
+GET http://localhost:8080/directors/directorsByNetWorth?top_n=6

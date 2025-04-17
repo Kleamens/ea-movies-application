@@ -6,13 +6,17 @@ import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService;
 import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -49,23 +53,37 @@ public class dataDownloader {
 
     public void downloadData() {
         URL resourceRelativePath = dataDownloader.class.getResource("/data/imdb_top_1000.csv");
-        assert resourceRelativePath != null;
+
+        try{
+            assert resourceRelativePath != null;
+        }catch (AssertionError e){
+            logger.error("CSV file was not found");
+            return;
+        }
+
         File CSVFile = new File(resourceRelativePath.getFile());
 
 
+
+        // Create an object of filereader
+        // class with CSV file as a parameter.
+        FileReader filereader = null;
+        try {
+            filereader = new FileReader(CSVFile);
+        } catch (FileNotFoundException f) {
+            logger.error("CSV file not found");
+            return;
+        }
+
+        // create csvReader object passing
+        // file reader as a parameter
+        CSVReader csvReader = new CSVReader(filereader);
+        String[] nextRecord;
+        boolean isFirstRecord = true;
+        Random generator = new Random();
+        // we are going to read data line by line
         try {
 
-            // Create an object of filereader
-            // class with CSV file as a parameter.
-            FileReader filereader = new FileReader(CSVFile);
-
-            // create csvReader object passing
-            // file reader as a parameter
-            CSVReader csvReader = new CSVReader(filereader);
-            String[] nextRecord;
-            boolean isFirstRecord = true;
-            Random generator = new Random();
-            // we are going to read data line by line
             while ((nextRecord = csvReader.readNext()) != null) {
 
                 if (isFirstRecord) {
@@ -123,16 +141,17 @@ public class dataDownloader {
                 movieService.createMovie(insertMovie);
 
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }catch (IOException i){
+            logger.error("Unable to read CSV file row");
         }
+
 
     }
 
     @PostConstruct
     public void dow() {
 
-        downloadData();
+//        downloadData();
     }
 
 
