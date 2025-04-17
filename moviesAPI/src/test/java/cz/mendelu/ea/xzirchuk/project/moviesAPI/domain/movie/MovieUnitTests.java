@@ -125,35 +125,31 @@ public class MovieUnitTests {
        assertThat( movieService.filterMoviesByParamters(
                 "Quentin Tarantino",
                 null,
-                null,
-                movies
+                null
+
         ),containsInAnyOrder(movie));
 
        assertThat(movieService.filterMoviesByParamters(
                "Steven Spielberg",
                null,
-               null,
-               movies
+               null
        ),containsInAnyOrder(movie2,movie3,movie4));
 
         assertThat(movieService.filterMoviesByParamters(
                 "Steven Spielberg",
                 null,
-                null,
-                movies
+                null
         ),containsInAnyOrder(movie2,movie3,movie4));
         assertThat(movieService.filterMoviesByParamters(
                 "Steven Spielberg",
                 null,
-                List.of("Crime"),
-                movies
+                List.of("Crime")
         ),containsInAnyOrder(movie3,movie2));
 
         assertThat(movieService.filterMoviesByParamters(
                 "Steven Spielberg",
                 LocalDate.of(1994, 10, 14),
-                List.of("Drama"),
-                movies
+                List.of("Drama")
         ),containsInAnyOrder(movie4));
 
     }

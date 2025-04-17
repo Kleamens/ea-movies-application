@@ -1,19 +1,19 @@
 ### GET A MOVIE PAGE
-GET http://localhost:8090/movies/?pageSize=20&pageNumber=0
+GET http://localhost:8080/movies/?pageSize=20&pageNumber=0
 
 ### GET A WRONG MOVIE PAGE NUMBER
-GET http://localhost:8090/movies/?pageSize=20&pageNumber=23098
+GET http://localhost:8080/movies/?pageSize=20&pageNumber=23098
 
 ### GET A PAGE WITH WRONG TOO BIG OF PAGE SIZE
-GET http://localhost:8090/movies/?pageSize=12022598209&pageNumber=0
+GET http://localhost:8080/movies/?pageSize=12022598209&pageNumber=0
 
 ### GET MOVIE BY ID
-GET http://localhost:8090/movies/aff16a97-7248-46c5-be48-5cd261cdf46e
+GET http://localhost:8080/movies/aff16a97-7248-46c5-be48-5cd261cdf46e
 
 #docker run --rm --name postgres -p 5433:5432 -e POSTGRES_PASSWORD=123 postgres
 
 ### CREATE A NEW MOVIE
-POST http://localhost:8090/movies/
+POST http://localhost:8080/movies/
 
 Content-Type: application/json
 
@@ -31,7 +31,7 @@ Content-Type: application/json
 }
 
 ### UPDATE MOVIE BY ID
-PUT http://localhost:8090/movies/aff16a97-7248-46c5-be48-5cd261cdf46e
+PUT http://localhost:8080/movies/aff16a97-7248-46c5-be48-5cd261cdf46e
 Content-Type: application/json
 
 {
@@ -48,8 +48,8 @@ Content-Type: application/json
 }
 
 ### DELETE MOVIE BY ID
-DELETE http://localhost:8090/movies/05fded13-ebdd-47f5-8830-81700c7f039d
+DELETE http://localhost:8080/movies/05fded13-ebdd-47f5-8830-81700c7f039d
 
 
 ### GET TOP MOVIES BY REVENUE
-GET http://localhost:8090/movies/topMoviesByRevenueWithFilter?top_n=200&genre=Comedy
+GET http://localhost:8080/movies/topMoviesByRevenueWithFilter?top_n=200&genre=Comedy

@@ -1,16 +1,20 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
+    private final Logger logger = LoggerFactory.getLogger(MovieContoller.class);
     private final MovieRepository movieRepository;
     private final MoviePaginationRepository moviePaginationRepository;
 
@@ -77,9 +81,17 @@ public class MovieService {
     public List<Movie> filterMoviesByParamters(
             String director_name,
             LocalDate releaseYear,
-            List<String> genre,
-            List<Movie> movies
+            List<String> genre
     ){
+        var movies = getAllMovies();
+        String string_genres = genre.stream()
+                .map(n -> String.valueOf(n))
+                .collect(Collectors.joining(",", "", ""));
+
+        if(doesGenreContainInvalid(string_genres)){
+            throw new BadInputException();
+        }
+//        filtering by req params
 
         List<Movie> movies_copy = List.copyOf(movies);
         var filtered_movies= new ArrayList<>(movies_copy.stream().filter(movie -> {
@@ -125,6 +137,19 @@ public class MovieService {
     }
 
 
+    public List<Movie> getTopNMovies(int top_n,List<Movie> movies){
+
+        List<Movie> filtered_movies=List.of();
+        try{
+            filtered_movies=movies.subList(0,top_n);
+        }catch (IndexOutOfBoundsException e){
+            logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
+        }catch (NumberFormatException e){
+            throw  new BadInputException();
+        }
+        return filtered_movies;
+
+    }
 
 
 }

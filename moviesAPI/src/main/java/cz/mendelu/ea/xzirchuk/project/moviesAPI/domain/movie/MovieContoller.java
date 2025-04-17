@@ -186,32 +186,21 @@ public class MovieContoller {
             @RequestParam(required = false) List<String> genre,
             @RequestParam(required = false) String year
             ){
-        var movies = movieService.getAllMovies();
-       String string_genres = genre.stream()
-                .map(n -> String.valueOf(n))
-                .collect(Collectors.joining(",", "", ""));
-
-        if(movieService.doesGenreContainInvalid(string_genres)){
+        var top_n_number = 0;
+        try{
+             top_n_number = Integer.parseInt(top_n);
+        }catch (NumberFormatException e){
             throw new BadInputException();
         }
-//        filtering by req params
-        var filtered_movies= movieService.filterMoviesByParamters(
+        var filtered_movies = movieService.filterMoviesByParamters(
                 director_name,
                 year!=null?LocalDate.parse(year):null,
-                genre,
-                movies
+                genre
         );
-        if (filtered_movies.isEmpty()){throw new NotFoundException();};
 //sorting by revenue
         movieService.sortMoviesByRevenue(filtered_movies);
 //getting first n results
-        try{
-            filtered_movies=filtered_movies.subList(0,Integer.parseInt(top_n));
-        }catch (IndexOutOfBoundsException e){
-            logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
-        }catch (NumberFormatException e){
-            throw  new BadInputException();
-        }
+        filtered_movies = movieService.getTopNMovies(top_n_number,filtered_movies);
         return ArrayResponse.of(filtered_movies,MovieResponse::new);
     }
     @GetMapping(value = "/topMoviesByImdbWithFilter", produces = "application/json")
@@ -229,31 +218,22 @@ public class MovieContoller {
             @RequestParam(required = false) List<String> genre,
             @RequestParam(required = false) String year
     ){
-        String string_genres = genre.stream()
-                .map(n -> String.valueOf(n))
-                .collect(Collectors.joining(",", "", ""));
-        if(movieService.doesGenreContainInvalid(string_genres)){
+        var top_n_number = 0;
+        try{
+            top_n_number = Integer.parseInt(top_n);
+        }catch (NumberFormatException e){
             throw new BadInputException();
         }
-        var movies = movieService.getAllMovies();
 //        filtering by req params
-        var filtered_movies= movieService.filterMoviesByParamters(
+        var filtered_movies = movieService.filterMoviesByParamters(
                 director_name,
                 year!=null?LocalDate.parse(year):null,
-                genre,
-                movies
+                genre
         );
-        if (filtered_movies.isEmpty()){throw new NotFoundException();};
 //sorting by revenue
         movieService.sortMoviesByImdbRating(filtered_movies);
 //getting first n results
-        try{
-            filtered_movies=filtered_movies.subList(0,Integer.parseInt(top_n));
-        }catch (IndexOutOfBoundsException e){
-            logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
-        }catch (NumberFormatException e){
-            throw  new BadInputException();
-        }
+        filtered_movies = movieService.getTopNMovies(top_n_number,filtered_movies);
         return ArrayResponse.of(filtered_movies,MovieResponse::new);
     }
     //suporting methods
