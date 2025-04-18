@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id 'groovy'
 
 }
 
@@ -34,14 +35,19 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// testing
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.rest-assured:rest-assured'
-	testImplementation 'io.rest-assured:spring-mock-mvc'
-	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	testImplementation 'io.rest-assured:rest-assured'
+//	testImplementation 'io.rest-assured:spring-mock-mvc'
+//	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
 
-	testImplementation 'org.hamcrest:hamcrest:2.2'
+//	testImplementation 'org.hamcrest:hamcrest:2.2'
 
 	implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
+
+
+	testImplementation 'org.codehaus.groovy:groovy-all:3.0.24'
+	// https://mvnrepository.com/artifact/org.spockframework/spock-core
+	testImplementation("org.spockframework:spock-core:2.4-M6-groovy-3.0")
 }
 
 tasks.named('test') {
