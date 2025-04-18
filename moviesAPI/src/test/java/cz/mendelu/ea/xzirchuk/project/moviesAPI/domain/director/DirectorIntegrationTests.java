@@ -23,7 +23,7 @@
 //@ExtendWith(SpringExtension.class)
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@Sql("/test-data/cleanup.sql")
-//@Sql("/test-data/base-data.sql")
+//@Sql("/test-data/basedata.sql")
 //public class DirectorIntegrationTests {
 //    private final static String BASE_URI = "http://localhost";
 //

@@ -39,7 +39,7 @@ public class Director {
     @Min(1)
     private Float net_worth;
 
-    @OneToMany(mappedBy = "director",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "director",cascade = {CascadeType.REMOVE,CascadeType.PERSIST})
     @JsonIgnore
     List<Movie> movieList;
 

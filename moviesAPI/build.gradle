@@ -35,7 +35,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	// testing
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 //	testImplementation 'io.rest-assured:rest-assured'
 //	testImplementation 'io.rest-assured:spring-mock-mvc'
 //	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
@@ -44,9 +44,8 @@ dependencies {
 
 	implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
 
-
-	testImplementation 'org.codehaus.groovy:groovy-all:3.0.24'
-	// https://mvnrepository.com/artifact/org.spockframework/spock-core
+	testImplementation "org.codehaus.groovy:groovy-all:3.0.24"
+	testImplementation("org.spockframework:spock-spring:2.4-M6-groovy-3.0")
 	testImplementation("org.spockframework:spock-core:2.4-M6-groovy-3.0")
 }
 

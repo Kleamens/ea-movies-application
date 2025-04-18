@@ -27,8 +27,6 @@ import java.util.UUID;
 public class Movie {
 
     @Id
-    @HashCodeExclude
-    @EqualsExclude
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
@@ -71,7 +69,7 @@ public class Movie {
 
     private Float revenue;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "director_id")
     @JsonIgnore
     Director director;
