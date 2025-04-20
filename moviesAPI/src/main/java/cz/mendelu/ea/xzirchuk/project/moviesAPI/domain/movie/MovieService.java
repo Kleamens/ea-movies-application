@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
-    private final Logger logger = LoggerFactory.getLogger(MovieContoller.class);
+    private final Logger logger = LoggerFactory.getLogger(MovieService.class);
     private final MovieRepository movieRepository;
     private final MoviePaginationRepository moviePaginationRepository;
 

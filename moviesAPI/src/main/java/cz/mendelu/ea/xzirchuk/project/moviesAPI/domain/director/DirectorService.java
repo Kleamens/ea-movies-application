@@ -18,7 +18,7 @@ import java.util.Collections;
 @Service
 public class DirectorService {
 
-    private final Logger logger = LoggerFactory.getLogger(MovieContoller.class);
+    private final Logger logger = LoggerFactory.getLogger(DirectorService.class);
     private final DirectorRepository directorRepository;
     private final DirectorPaginationRepository directorPaginationRepository;
 
