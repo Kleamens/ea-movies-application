@@ -20,6 +20,12 @@
                              referencedTableName="movie" referencedColumnNames="id"/>
             </column>
 
+            <column name="user_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_movie_rental_user"
+                             referencedTableName="rental_user" referencedColumnNames="id"/>
+            </column>
+
+
             <column name="rental_start_date" type="DATE">
                 <constraints nullable="false"/>
             </column>
@@ -29,6 +35,7 @@
             </column>
 
             <column name="actual_return_date" type="DATE"/>
+<!--            Could make it unique-->
         </createTable>
     </changeSet>
 

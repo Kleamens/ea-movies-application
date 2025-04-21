@@ -1,8 +1,7 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.rental;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
+import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.user.RentalUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,11 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.EqualsExclude;
-import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import java.time.LocalDate;
 import java.util.UUID;
-
+//This a basic implementation of the rental system, for greter robustnes obviously the better solution is creating a User entity
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +21,6 @@ import java.util.UUID;
 public class Rental {
 
     @Id
-    @HashCodeExclude
     @EqualsExclude
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
@@ -32,14 +29,18 @@ public class Rental {
     LocalDate rentalStartDate;
 
     @NotNull
-    LocalDate expectedMovieReturnDate;
+    LocalDate expectedReturnDate;
 
-    @NotNull
-    LocalDate actualMovieReturnDate;
+
+    LocalDate actualReturnDate = null;
+
 
     @ManyToOne()
     @JoinColumn(name = "movie_id")
-    @JsonIgnore
     Movie movie;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    RentalUser user;
 
 }

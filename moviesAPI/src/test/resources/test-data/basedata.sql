@@ -16,3 +16,4 @@ VALUES ('3b2e4c38-4c62-4884-a1d3-908cc1a3d9a7','Bruh','1998-01-01',
         '2024-05-20 13:23:59.37519','no idea',90,'U',80,'Comedy',
         4.2,5762,'fa4bfeee-0c1c-4f52-b5b0-04b616f6e528');
 
+INSERT INTO public.rental_user (id, name,  surname,email) VALUES ('ce69a41b-da7d-4f65-97ff-f5bff832c783', 'Joe', 'Sunderland','joesunderland@gmail.com');
