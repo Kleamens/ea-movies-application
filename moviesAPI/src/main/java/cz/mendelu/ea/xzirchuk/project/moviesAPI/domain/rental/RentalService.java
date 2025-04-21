@@ -44,8 +44,11 @@ public class RentalService {
         return rentalRepository.findById(id);
     }
 
+    public Boolean isMovieRented(Movie movie){
+        return rentalRepository.findRentalByMovieIdAndActualReturnDateIsNull(movie.getId()).isPresent();
+    }
     public Rental createRental(Rental rental){
-        if(rentalRepository.findRentalByMovieIdAndActualReturnDateIsNull(rental.getMovie().getId()).isPresent()){
+        if(isMovieRented(rental.getMovie())){
             throw new IllegalArgumentException("This movie is already rented");
         }
         else if (rental.getRentalStartDate().isAfter(rental.getExpectedReturnDate())){
@@ -59,15 +62,23 @@ public class RentalService {
 
     public Rental updateRental(UUID id, Rental rental) {
         rental.setId(id);
-        return rentalRepository.save(rental);
+        if(rental.getRentalStartDate().isBefore(rental.getExpectedReturnDate())){
+            throw new IllegalArgumentException("Rental start date cannot be after finished date");
+        }
+        else if(isMovieRented(rental.getMovie())){
+            throw new IllegalArgumentException("This movie is already rented");
+        }
+        else if(rental.getActualReturnDate().isBefore(rental.getRentalStartDate())){
+            throw new IllegalArgumentException("Rental finish date cannot be before start date");
+        }else{
+            return rentalRepository.save(rental);
+        }
+
     }
     public void deleteRental(UUID id) {
         rentalRepository.deleteById(id);
     }
 
-    public Boolean isMovieRented(Movie movie,MovieService movieService){
-        return rentalRepository.findRentalByMovieIdAndActualReturnDateIsNull(movie.getId()).isPresent();
-    }
     public Rental finishRental(Rental rental, LocalDate returnDate){
         Rental latestUnfinishedRental =  rentalRepository.findRentalByMovieIdAndActualReturnDateIsNull(rental.getMovie().getId()).orElseThrow(NotFoundException::new);
         if (returnDate.isBefore(rental.getRentalStartDate())){
