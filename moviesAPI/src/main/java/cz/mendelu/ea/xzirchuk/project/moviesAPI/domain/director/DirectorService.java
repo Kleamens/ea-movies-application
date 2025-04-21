@@ -86,7 +86,7 @@ public class DirectorService {
         }catch (IndexOutOfBoundsException e){
             logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
         }catch (NumberFormatException e){
-            throw new BadInputException();
+            throw new BadInputException("AAAAAAAA");
         }
         return filtered_directors;
     }

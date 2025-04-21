@@ -22,9 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("directors")
@@ -39,6 +37,9 @@ public class DirectorContoller {
     private final DirectorService directorService;
     private final MovieService movieService;
 
+    private  final String DEFAULT_NOT_FOUND="Director not found";
+    private  final String DEFAULT_ALREDY_EXISTS ="Director already exists";
+    private  final String DEFAULT_BAD_REQUEST ="Invalid data provided";
     @Autowired
     public DirectorContoller(
             DirectorService directorService, MovieService movieService
@@ -64,7 +65,7 @@ public class DirectorContoller {
                     pageNumber
                     , pageSize);
         } catch (NumberFormatException e) {
-            throw new BadInputException();
+            throw new BadInputException(DEFAULT_BAD_REQUEST);
         }
 
 
@@ -81,7 +82,9 @@ public class DirectorContoller {
             @ApiResponse(responseCode = "404",description = "Director with id doesnt exist"),
     })
     public ObjectResponse<DirectorResponse> getDirectorById(@PathVariable UUID id){
-        Director director = directorService.getDirectorById(id).orElseThrow(NotFoundException::new);
+        Director director = directorService.getDirectorById(id).orElseThrow(
+                ()-> new NotFoundException(DEFAULT_NOT_FOUND)
+        );
         return  ObjectResponse.of(director,DirectorResponse::new);
     }
 
@@ -99,7 +102,7 @@ public class DirectorContoller {
     public ObjectResponse<DirectorResponse> createDirector(@Valid @RequestBody DirectorRequest directorRequest){
         Director director = new Director();
         if (directorService.findDirectorByName(directorRequest.getName()).isPresent()){
-            throw new AlreadyExistsException();
+            throw new AlreadyExistsException(DEFAULT_ALREDY_EXISTS);
         }else{
             directorRequest.toDirector(director,movieService);
             directorService.createDirector(director);
@@ -123,10 +126,10 @@ public class DirectorContoller {
             @PathVariable UUID id ,
             @RequestBody @Valid DirectorRequest directorRequest){
         Director director = directorService.getDirectorById(id).orElseThrow(
-                NotFoundException::new
+                ()-> new NotFoundException(DEFAULT_NOT_FOUND)
         );
         if (directorService.findDirectorByName(directorRequest.getName()).isPresent()) {
-            throw new AlreadyExistsException();
+            throw new AlreadyExistsException(DEFAULT_ALREDY_EXISTS);
         }
         directorRequest.toDirector(director,movieService);
         var return_director=directorService.updateDirector(id,director);
@@ -146,7 +149,9 @@ public class DirectorContoller {
     public void deleteDirector(@PathVariable UUID id) {
         directorService.deleteDirector(
                 directorService
-                        .getDirectorById(id).orElseThrow(NotFoundException::new).getId()
+                        .getDirectorById(id).orElseThrow(
+                                ()-> new NotFoundException(DEFAULT_NOT_FOUND)
+                        ).getId()
         );
     }
 
@@ -168,20 +173,6 @@ public class DirectorContoller {
         return new DirectorsResponse(directors);
     }
 
-    @ExceptionHandler({BadInputException.class})
-    public ResponseEntity BadInputExceptionDirector(final BadInputException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Erroneous input when searching for director",BAD_REQUEST);
-        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
-    }
-    @ExceptionHandler(AlreadyExistsException.class)
-    public ResponseEntity exceptionDirectorExists(AlreadyExistsException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Director already exists",CONFLICT);
-        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
-    }
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity exceptionDirectorNotFound(NotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Director not found",NOT_FOUND);
-        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
-    }
+
 
 }

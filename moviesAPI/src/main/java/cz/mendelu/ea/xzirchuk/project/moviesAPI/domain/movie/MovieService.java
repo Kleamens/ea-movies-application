@@ -96,7 +96,7 @@ public class MovieService {
                 .collect(Collectors.joining(",", "", ""));
 
         if(doesGenreContainInvalid(string_genres)){
-            throw new BadInputException();
+            throw new BadInputException("AAAAAAAAA");
         }
 //        filtering by req params
 
@@ -152,7 +152,7 @@ public class MovieService {
         }catch (IndexOutOfBoundsException e){
             logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
         }catch (NumberFormatException e){
-            throw  new BadInputException();
+            throw  new BadInputException("AAAAAAAAAAA");
         }
         return filtered_movies;
 

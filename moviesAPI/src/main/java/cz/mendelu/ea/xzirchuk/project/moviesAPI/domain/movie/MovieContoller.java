@@ -43,6 +43,10 @@ public class MovieContoller {
     private  final MovieService movieService;
     private final DirectorService directorService;
 
+    private  final String DEFAULT_NOT_FOUND="Movie not found";
+    private  final String DEFAULT_ALREDY_EXISTS ="Movie already exists";
+    private  final String DEFAULT_BAD_REQUEST ="Invalid data provided";
+
     @Autowired
     public MovieContoller(MovieService movieService,
                           DirectorService directorService){
@@ -67,12 +71,12 @@ public class MovieContoller {
                     pageNumber
                     , pageSize);
         } catch (NumberFormatException e) {
-            throw new BadInputException();
+            throw new BadInputException("AAAAAAAAAAAA");
 
         }
 
         if (movies.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundException(DEFAULT_NOT_FOUND);
         }
 
         return new MoviesResponse(movies);
@@ -93,7 +97,7 @@ public class MovieContoller {
     })
     public ObjectResponse<MovieResponse> createMovie(@RequestBody @Valid MovieRequest movieRequest){
         if(movieService.doesGenreContainInvalid(movieRequest.getGenre())){
-            throw new BadInputException();
+            throw new BadInputException("AAAAAAAAAAAA");
         }
 
         Movie movie = new Movie();
@@ -102,10 +106,10 @@ public class MovieContoller {
         if(directorService.getDirectorById(movie.getDirector()
                         .getId())
                 .orElseThrow(
-                        NotFoundException::new
+                        ()-> new NotFoundException(DEFAULT_NOT_FOUND)
                 )
                 .getMovieList().stream().map(Movie::getTitle).toList().contains(movie.getTitle())){
-            throw new AlreadyExistsException();
+            throw new AlreadyExistsException(DEFAULT_ALREDY_EXISTS);
         }
 
         movieService.createMovie(movie);
@@ -122,7 +126,9 @@ public class MovieContoller {
             @ApiResponse(responseCode = "404",description = "The movies with the id was not found")
     })
     public ObjectResponse<MovieResponse> getMovieById(@PathVariable UUID id){
-        Movie movie = movieService.getMovieById(id).orElseThrow(NotFoundException::new);
+        Movie movie = movieService.getMovieById(id).orElseThrow(
+                ()-> new NotFoundException(DEFAULT_NOT_FOUND)
+        );
         return  ObjectResponse.of(movie,MovieResponse::new);
     }
 
@@ -144,10 +150,12 @@ public class MovieContoller {
     })
     public ObjectResponse<MovieResponse> updateMovie(@PathVariable UUID id, @RequestBody @Valid MovieRequest movieRequest) {
         if(movieService.doesGenreContainInvalid(movieRequest.getGenre())){
-            throw new BadInputException();
+            throw new BadInputException("AAAAAAA");
         }
         Movie movie = movieService.getMovieById(id)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(
+                        ()-> new NotFoundException(DEFAULT_NOT_FOUND)
+                );
         movieRequest.toMovie(movie,directorService);
         doesMoviesAlreadyExist(movie);
         movie.setLastModified(Instant.now());
@@ -169,7 +177,9 @@ public class MovieContoller {
     public void deleteMovie(@PathVariable UUID id) {
         movieService.deleteMovie(
                 movieService
-                        .getMovieById(id).orElseThrow(NotFoundException::new).getId()
+                        .getMovieById(id).orElseThrow(
+                                ()-> new NotFoundException(DEFAULT_NOT_FOUND)
+                        ).getId()
         );
     }
 
@@ -231,27 +241,13 @@ public class MovieContoller {
         if(directorService.getDirectorById(movie.getDirector()
                         .getId())
                 .orElseThrow(
-                        NotFoundException::new
+                        ()-> new NotFoundException(DEFAULT_NOT_FOUND)
                 )
                 .getMovieList().stream().map(Movie::getTitle).toList().contains(movie.getTitle())){
-            throw new AlreadyExistsException();
+            throw new AlreadyExistsException(DEFAULT_ALREDY_EXISTS);
         }
     }
 
-    @ExceptionHandler(BadInputException.class)
-    public ResponseEntity BadInputExceptionDirector(final BadInputException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Erroneous input when searching for movie",BAD_REQUEST);
-        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
-    }
-    @ExceptionHandler(AlreadyExistsException.class)
-    public ResponseEntity exceptionDirectorExists(AlreadyExistsException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Movie already exists",CONFLICT);
-        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
-    }
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity exceptionDirectorNotFound(NotFoundException ex) {
-        ErrorResponse errorResponse = new ErrorResponse("Movie not found",NOT_FOUND);
-        return new ResponseEntity<>(errorResponse.getMessage(),errorResponse.getHttpStatus());
-    }
+
 
 }

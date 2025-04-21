@@ -88,7 +88,9 @@ public class MovieRequest {
         movie.setGenre(genre);
         movie.setImdbRating(imdbRating);
         movie.setRevenue(revenue);
-        movie.setDirector(directorService.getDirectorById(director_id).orElseThrow(NotFoundException::new));
+        movie.setDirector(directorService.getDirectorById(director_id).orElseThrow(
+                ()->new NotFoundException("Director not found")
+        ));
     }
 
 
