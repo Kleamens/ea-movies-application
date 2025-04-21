@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-class MoviesResponse {
+public class MoviesResponse {
     List<MovieResponse> movies;
 
     MoviesResponse(List<Movie> movies) {
