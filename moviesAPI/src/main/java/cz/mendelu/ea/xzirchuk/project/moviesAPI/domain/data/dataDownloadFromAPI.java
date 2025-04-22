@@ -103,7 +103,10 @@ public class dataDownloadFromAPI {
     }
     @PostConstruct
     public void dow() {
-
-        downloadDataFromAPI();
+        if (movieService.getMoviePage(0,10).isEmpty()){
+            downloadDataFromAPI();
+        }else{
+            logger.info("DATABASE IS NOT EMPTY, CONTIUNING WITHOUT API DOWNLOAD");
+        }
     }
 }
