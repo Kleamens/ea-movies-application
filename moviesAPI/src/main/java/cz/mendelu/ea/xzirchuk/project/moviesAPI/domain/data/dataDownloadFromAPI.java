@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientException;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
@@ -35,16 +36,27 @@ public class dataDownloadFromAPI {
     }
 
     public void downloadDataFromAPI(){
-        Mono<FilmResponse> response =  webClient.get()
-                .uri("/films")
-                .retrieve()
+        WebClient.ResponseSpec response = null;
+        Mono<FilmResponse> data = null;
+        try{
+            response =  webClient.get()
+                    .uri("/films")
+                    .retrieve();
+        }catch (WebClientException ex) {
+            logger.error("failed to retrieve web resource : {}", ex.getMessage());
 
-                .bodyToMono(FilmResponse.class);
+        }
+        try {
+           data = response.bodyToMono(FilmResponse.class);
+        }catch (WebClientException ex) {
+            logger.error("Transformation to Object failed {}", ex.getMessage());
 
-       FilmResponse actualClass = response.block();
+        }
 
+        FilmResponse actualClass = data.block();
 
         assert actualClass != null;
+        
         for (FilmResult i : actualClass.getResult()){
            Movie insertMovie = new Movie();
 
