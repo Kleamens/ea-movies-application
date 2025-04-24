@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
         name = "Movies",
         description = "Manages the CRUD opeation on the movie entites with addition of other manipulation with the movies in the db"
 )
+@Slf4j
 public class MovieContoller {
-    private final Logger logger = LoggerFactory.getLogger(MovieContoller.class);
     private  final MovieService movieService;
     private final DirectorService directorService;
 

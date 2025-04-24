@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ import static org.springframework.http.HttpStatus.*;
         name = "Directors",
         description = "Manages the CRUD opeation on the director entites with addition of other manipulation with the directors in the db"
 )
+@Slf4j
 public class DirectorContoller {
-    private final Logger logger = LoggerFactory.getLogger(DirectorContoller.class);
 
     private final DirectorService directorService;
     private final MovieService movieService;

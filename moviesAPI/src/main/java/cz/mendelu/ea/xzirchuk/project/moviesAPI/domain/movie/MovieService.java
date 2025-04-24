@@ -2,6 +2,7 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie;
 
 
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -20,8 +21,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class MovieService {
-    private final Logger logger = LoggerFactory.getLogger(MovieContoller.class);
     private final MovieRepository movieRepository;
     private final MoviePaginationRepository moviePaginationRepository;
 
@@ -150,7 +151,7 @@ public class MovieService {
         try{
             filtered_movies=movies.subList(0,top_n);
         }catch (IndexOutOfBoundsException e){
-            logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
+            log.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
         }catch (NumberFormatException e){
             throw  new BadInputException("AAAAAAAAAAA");
         }

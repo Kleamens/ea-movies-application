@@ -2,6 +2,7 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director;
 
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieContoller;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -16,9 +17,9 @@ import java.util.Comparator;
 import java.util.Collections;
 
 @Service
+@Slf4j
 public class DirectorService {
 
-    private final Logger logger = LoggerFactory.getLogger(MovieContoller.class);
     private final DirectorRepository directorRepository;
     private final DirectorPaginationRepository directorPaginationRepository;
 
@@ -84,7 +85,7 @@ public class DirectorService {
         try{
             filtered_directors =directors.subList(0,top_n);
         }catch (IndexOutOfBoundsException e){
-            logger.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
+            log.debug("### LIMIT TOO HIGH, RETURNING ALL OF THE AVAILABLE ITEMS ");
         }catch (NumberFormatException e){
             throw new BadInputException("AAAAAAAA");
         }

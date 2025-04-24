@@ -6,6 +6,7 @@ import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,9 @@ import java.util.Random;
 
 
 @Service
+@Slf4j
 public class dataDownloader {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final DirectorService directorService;
 
     private final MovieService movieService;
@@ -55,7 +56,7 @@ public class dataDownloader {
         try{
             assert resourceRelativePath != null;
         }catch (AssertionError e){
-            logger.error("CSV file was not found");
+            log.error("CSV file was not found");
             return;
         }
 
@@ -69,7 +70,7 @@ public class dataDownloader {
         try {
             filereader = new FileReader(CSVFile);
         } catch (FileNotFoundException f) {
-            logger.error("CSV file not found");
+            log.error("CSV file not found");
             return;
         }
 
@@ -94,7 +95,7 @@ public class dataDownloader {
                 for (int i = 1; i < nextRecord.length; i++) {
                     params.add(nextRecord[i]);
                 }
-                logger.debug("### Parameters ### {}", params);
+                log.debug("### Parameters ### {}", params);
                 insertMovie.setTitle(params.get(MOVIE_TITLE));
                 insertMovie.setReleaseYear(
                         LocalDate.ofYearDay(
@@ -121,7 +122,7 @@ public class dataDownloader {
                         (!params.get(MOVIE_META_SCORE).isEmpty() ? Integer.parseInt(params.get(MOVIE_META_SCORE)) : generator.nextInt(0, 100)));
                 if (directorService.findDirectorByName(params.get(DIRECTOR_NAME)).isPresent()) {
                     director = directorService.findDirectorByName(params.get(DIRECTOR_NAME)).get();
-                    logger.info("### Director ### {}", director);
+                    log.info("### Director ### {}", director);
                 } else {
                     director.setName(params.get(DIRECTOR_NAME));
                     director.setNet_worth(generator.nextFloat(1f, 10f));
@@ -140,7 +141,7 @@ public class dataDownloader {
 
             }
         }catch (IOException i){
-            logger.error("Unable to read CSV file row");
+            log.error("Unable to read CSV file row");
         }
 
 
