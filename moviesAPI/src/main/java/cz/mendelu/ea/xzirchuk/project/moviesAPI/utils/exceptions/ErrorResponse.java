@@ -8,6 +8,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class ErrorResponse {
     private final String message;
-    private final HttpStatus httpStatus;
+    private final CodeEnum errorCode;
 
 }
