@@ -4,8 +4,6 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -112,12 +110,6 @@ public class MovieService {
         return filtered_movies;
     }
     public List<Movie> getMoviesByDirectorName(String name){
-//        List<Movie> movies = new ArrayList<>();
-//
-//        movieRepository.findAll().forEach(movies::add);
-//        movies = movies.stream().filter(
-//                movie -> movie.getDirector().getName().equals(name)
-//        ).toList();
         return  movieRepository.getMoviesByDirector_Name(name);
     }
 

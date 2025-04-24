@@ -1,11 +1,8 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director;
 
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieContoller;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
