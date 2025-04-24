@@ -112,13 +112,13 @@ public class MovieService {
         return filtered_movies;
     }
     public List<Movie> getMoviesByDirectorName(String name){
-        List<Movie> movies = new ArrayList<>();
-
-        movieRepository.findAll().forEach(movies::add);
-        movies = movies.stream().filter(
-                movie -> movie.getDirector().getName().equals(name)
-        ).toList();
-        return  movies;
+//        List<Movie> movies = new ArrayList<>();
+//
+//        movieRepository.findAll().forEach(movies::add);
+//        movies = movies.stream().filter(
+//                movie -> movie.getDirector().getName().equals(name)
+//        ).toList();
+        return  movieRepository.getMoviesByDirector_Name(name);
     }
 
     public boolean doesGenreContainInvalid(String genres){
