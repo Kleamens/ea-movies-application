@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+<changeSet author="liquibase-user" id="create_movie_table">
+    <createTable tableName="movie">
+        <column name="id" type="uuid" valueComputed="gen_random_uuid()">
+            <constraints primaryKey="true" nullable="false"/>
+        </column>
+        <column name="title" type="varchar(255)"/>
+        <column name="release_year" type="date"/>
+        <column name="last_modified" type="timestamp" />
+        <column name="overview" type="text" />
+        <column name="meta_score" type="integer" />
+        <column name="certificate" type="varchar(255)" />
+        <column name="runtime" type="integer" />
+        <column name="genre" type="varchar(255)" />
+        <column name="imdb_rating" type="float" />
+        <column name="revenue" type="float" >
+            <constraints nullable="true"/>
+        </column>
+        <column name="director_id" type="uuid"/>
+
+    </createTable>
+</changeSet>
+    <changeSet author="liquibase" id="add_fk_director_to_movie">
+     <addForeignKeyConstraint baseTableName="movie"
+                             baseColumnNames="director_id"
+                             constraintName="fk_movie_director"
+                             referencedTableName="director"
+                             referencedColumnNames="id"/>
+
+    </changeSet>
+
+</databaseChangeLog>
