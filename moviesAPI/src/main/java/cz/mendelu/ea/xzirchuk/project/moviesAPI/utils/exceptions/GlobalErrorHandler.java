@@ -15,16 +15,19 @@ import static org.springframework.http.HttpStatus.*;
 public class GlobalErrorHandler {
 //    For the needs of global error handling
     @ExceptionHandler({BadInputException.class,MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<?> BadInputExceptionDirector(RuntimeException ex) {
-        return new ResponseEntity<>(ex.getMessage(),BAD_REQUEST);
+    public ResponseEntity<ErrorResponse> exceptionBadInput(RuntimeException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
 
     }
     @ExceptionHandler(AlreadyExistsException.class)
-    public ResponseEntity exceptionDirectorExists(AlreadyExistsException ex) {
-        return new ResponseEntity<>(ex.getMessage(),CONFLICT);
+    public ResponseEntity<ErrorResponse> exceptionAlreadyExists(AlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),CONFLICT);
+        return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity exceptionDirectorNotFound(NotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(),NOT_FOUND);
+    public ResponseEntity<ErrorResponse> exceptionNotFound(NotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, errorResponse.getHttpStatus());
     }
 }
