@@ -8,9 +8,6 @@ import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -28,7 +25,7 @@ import java.util.Random;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class dataDownloader {
+public class DataDownloader {
 
     private final DirectorService directorService;
 
@@ -46,7 +43,7 @@ public class dataDownloader {
 
 
     public void downloadData() {
-        URL resourceRelativePath = dataDownloader.class.getResource("/data/imdb_top_1000.csv");
+        URL resourceRelativePath = DataDownloader.class.getResource("/data/imdb_top_1000.csv");
 
         try{
             assert resourceRelativePath != null;
