@@ -2,6 +2,7 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie;
 
 
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,18 +23,10 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class MovieService {
     private final MovieRepository movieRepository;
     private final MoviePaginationRepository moviePaginationRepository;
-
-
-    public MovieService(MovieRepository movieRepository,
-                        MoviePaginationRepository moviePaginationRepository)
-    {
-
-        this.movieRepository= movieRepository;
-        this.moviePaginationRepository = moviePaginationRepository;
-    }
 
     public List<Movie> getAllMovies(){
         List<Movie> movies = new ArrayList<>();

@@ -6,6 +6,7 @@ import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import java.util.Random;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class dataDownloader {
 
     private final DirectorService directorService;
@@ -41,13 +43,6 @@ public class dataDownloader {
     private final int MOVIE_OVERVIEW = 6;
     private final int MOVIE_META_SCORE = 7;
     private final int DIRECTOR_NAME = 8;
-
-
-    @Autowired
-    public dataDownloader(MovieService movieService, DirectorService directorService) {
-        this.directorService = directorService;
-        this.movieService = movieService;
-    }
 
 
     public void downloadData() {

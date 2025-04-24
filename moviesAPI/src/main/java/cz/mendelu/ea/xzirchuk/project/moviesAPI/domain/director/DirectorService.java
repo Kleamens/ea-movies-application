@@ -2,6 +2,7 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director;
 
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieContoller;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.BadInputException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +19,13 @@ import java.util.Collections;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class DirectorService {
 
     private final DirectorRepository directorRepository;
     private final DirectorPaginationRepository directorPaginationRepository;
 
 
-    public DirectorService(DirectorRepository directorRepository,
-                           DirectorPaginationRepository directorPaginationRepository){
-        this.directorRepository = directorRepository;
-        this.directorPaginationRepository = directorPaginationRepository;
-    }
 
     public List<Director> getAllDirectors(){
         List<Director> directors = new ArrayList<>();

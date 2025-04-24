@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import static org.springframework.http.HttpStatus.*;
         description = "Manages the CRUD opeation on the director entites with addition of other manipulation with the directors in the db"
 )
 @Slf4j
+@RequiredArgsConstructor
 public class DirectorContoller {
 
     private final DirectorService directorService;
@@ -41,13 +43,6 @@ public class DirectorContoller {
     private  final String DEFAULT_NOT_FOUND="Director not found";
     private  final String DEFAULT_ALREDY_EXISTS ="Director already exists";
     private  final String DEFAULT_BAD_REQUEST ="Invalid data provided";
-    @Autowired
-    public DirectorContoller(
-            DirectorService directorService, MovieService movieService
-    ){
-        this.directorService = directorService;
-        this.movieService = movieService;
-    }
 
     @GetMapping(value = "/",produces = "application/json")
     @Operation(

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
         description = "Manages the CRUD opeation on the movie entites with addition of other manipulation with the movies in the db"
 )
 @Slf4j
+@RequiredArgsConstructor
 public class MovieContoller {
     private  final MovieService movieService;
     private final DirectorService directorService;
@@ -48,12 +50,6 @@ public class MovieContoller {
     private  final String DEFAULT_ALREDY_EXISTS ="Movie already exists";
     private  final String DEFAULT_BAD_REQUEST ="Invalid data provided";
 
-    @Autowired
-    public MovieContoller(MovieService movieService,
-                          DirectorService directorService){
-        this.movieService = movieService;
-        this.directorService = directorService;
-    }
 
     @GetMapping(value = "/",produces = "application/json")
     @Operation(
