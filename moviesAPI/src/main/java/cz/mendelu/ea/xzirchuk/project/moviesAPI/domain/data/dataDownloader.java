@@ -45,10 +45,8 @@ public class DataDownloader {
     public void downloadData() {
         URL resourceRelativePath = DataDownloader.class.getResource("/data/imdb_top_1000.csv");
 
-        try{
-            assert resourceRelativePath != null;
-        }catch (AssertionError e){
-            log.error("CSV file was not found");
+        if (resourceRelativePath == null) {
+            log.error("CSV file was not found on path: {}", resourceRelativePath);
             return;
         }
 
