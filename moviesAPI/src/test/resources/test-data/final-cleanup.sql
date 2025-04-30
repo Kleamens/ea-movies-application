@@ -1,3 +1,3 @@
-drop table test.movie Cascade ;
+drop table movie Cascade ;
 
-drop table  test.director cascade ;
+drop table  director cascade ;

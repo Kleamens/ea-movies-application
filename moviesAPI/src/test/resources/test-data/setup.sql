@@ -1,5 +1,5 @@
 CREATE SCHEMA if not exists test;
-create table test.director (
+create table if not exists director (
                                id        uuid not null
                                    primary key,
                                name      varchar(255)
@@ -9,7 +9,7 @@ create table test.director (
 
 
 
-create table test.movie
+create table if not exists movie
 (
     id            uuid not null
         primary key,
