@@ -4,13 +4,11 @@ import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService;
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.utils.exceptions.NotFoundException;
-import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.NonUniqueResultException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
@@ -21,17 +19,20 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class dataDownloadFromAPI {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final MovieService movieService;
     private final DirectorService directorService;
     private final WebClient webClient;
 
     @Autowired
-    public dataDownloadFromAPI(MovieService movieService, DirectorService directorService,WebClient.Builder webClientBuilder) {
+    public dataDownloadFromAPI(MovieService movieService,
+                               DirectorService directorService,
+                               WebClient.Builder webClientBuilder,
+                               @Value("${app.download.url}") String downloadURL){
         this.movieService = movieService;
-        this.webClient = webClientBuilder.baseUrl("https://www.swapi.tech/api").build();
+        this.webClient = webClientBuilder.baseUrl(downloadURL).build();
         this.directorService = directorService;
     }
 
@@ -39,18 +40,12 @@ public class dataDownloadFromAPI {
         WebClient.ResponseSpec response = null;
         Mono<FilmResponse> data = null;
         try{
-            response =  webClient.get()
+            data =  webClient.get()
                     .uri("/films")
-                    .retrieve();
+                    .retrieve()
+                    .bodyToMono(FilmResponse.class);
         }catch (WebClientException ex) {
-            logger.error("failed to retrieve web resource : {}", ex.getMessage());
-
-        }
-        try {
-           data = response.bodyToMono(FilmResponse.class);
-        }catch (WebClientException ex) {
-            logger.error("Transformation to Object failed {}", ex.getMessage());
-
+            log.error("failed to retrieve web resource : {}", ex.getMessage());
         }
 
         FilmResponse actualClass = data.block();
@@ -101,12 +96,12 @@ public class dataDownloadFromAPI {
            }
         }
     }
-    @PostConstruct
+    @Scheduled(cron = "0 0 * * * ?")
     public void dow() {
         if (movieService.getMoviePage(0,10).isEmpty()){
             downloadDataFromAPI();
         }else{
-            logger.info("DATABASE IS NOT EMPTY, CONTIUNING WITHOUT API DOWNLOAD");
+            log.info("DATABASE IS NOT EMPTY, CONTIUNING WITHOUT API DOWNLOAD");
         }
     }
 }

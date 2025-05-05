@@ -5,13 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
 public class FilmResult {
     private String _id;
     private String uid;
     private String description;
     private int __v;
     private FilmProperties properties;
-
-    // Getters and setters
 }

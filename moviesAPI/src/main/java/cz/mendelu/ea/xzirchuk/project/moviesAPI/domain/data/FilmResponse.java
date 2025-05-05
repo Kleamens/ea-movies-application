@@ -8,11 +8,9 @@ import java.util.List;
 
 @Getter
 @Setter
-
 public class FilmResponse {
     private String message;
     private List<FilmResult> result;
 
-    // Getters and setters
 }
 

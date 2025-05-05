@@ -24,6 +24,4 @@ public class FilmProperties {
     private List<String> characters;
     private List<String> species;
     private String url;
-
-    // Getters and setters
 }
