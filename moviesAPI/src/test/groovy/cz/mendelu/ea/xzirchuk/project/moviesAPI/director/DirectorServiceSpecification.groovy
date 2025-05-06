@@ -28,7 +28,6 @@ import java.sql.Statement
 
 @SpringBootTest(classes = [MoviesApiApplication])
 @ActiveProfiles("test")
-@Sql(value = "/test-data/final-cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS,config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
 @Slf4j
 class DirectorServiceSpecification extends Specification{
 
