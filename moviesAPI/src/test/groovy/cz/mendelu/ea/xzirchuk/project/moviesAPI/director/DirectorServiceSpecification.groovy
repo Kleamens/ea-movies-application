@@ -4,6 +4,8 @@ import cz.mendelu.ea.xzirchuk.project.moviesAPI.MoviesApiApplication
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorContoller
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService
+import cz.mendelu.ea.xzirchuk.project.moviesAPI.utility.Mocks
+import groovy.util.logging.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,6 +29,7 @@ import java.sql.Statement
 @SpringBootTest(classes = [MoviesApiApplication])
 @ActiveProfiles("test")
 @Sql(value = "/test-data/final-cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS,config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
+@Slf4j
 class DirectorServiceSpecification extends Specification{
 
     @Autowired
@@ -75,11 +78,6 @@ class DirectorServiceSpecification extends Specification{
         )
     }
 
-    void setupSpec(){
-    }
-
-    void cleanupSpec(){
-    }
 
 
 
@@ -96,30 +94,26 @@ class DirectorServiceSpecification extends Specification{
         given:
             List<Director> originalDirectors = directorService.getAllDirectors()
             int originalDirectorListSize = originalDirectors.size()
-
-            Director newDirector = new Director(
-                    name: "Jeff",
-                    net_worth: 2.0,
-                    movieList: []
-            )
-            directorService.createDirector(newDirector)
+            Director director  = Mocks.director
+            directorService.createDirector(director)
         when:
             List<Director> newDirectors = directorService.getAllDirectors()
             int directorsListSize = newDirectors.size()
         then:
-        directorsListSize == originalDirectorListSize+1
+        (directorsListSize == originalDirectorListSize+1)&&(newDirectors.contains(director))
     }
 
     def "Should delete a director"(){
         given:
             List<Director> originalDirectors = directorService.getAllDirectors()
             int originalDirectorListSize = originalDirectors.size()
-            directorService.deleteDirector(UUID.fromString("fa4bfeee-0c1c-4f52-b5b0-04b616f6e528"))
+            UUID idToDelete = UUID.fromString("fa4bfeee-0c1c-4f52-b5b0-04b616f6e528")
+            directorService.deleteDirector(idToDelete)
         when:
             List<Director> newDirectors = directorService.getAllDirectors()
             int directorsListSize = newDirectors.size()
         then:
-            directorsListSize == originalDirectorListSize-1
+        (directorsListSize == originalDirectorListSize-1)&&(directorService.getDirectorById(idToDelete).isEmpty())
     }
 
 

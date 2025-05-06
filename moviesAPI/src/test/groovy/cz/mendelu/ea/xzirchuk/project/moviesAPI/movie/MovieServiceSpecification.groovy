@@ -8,6 +8,7 @@ import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utility.Mocks
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utility.Utils
+import groovy.util.logging.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,6 +28,7 @@ import javax.sql.DataSource
 @SpringBootTest(classes = [MoviesApiApplication])
 @ActiveProfiles("test")
 @Sql(value = "/test-data/final-cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS,config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
+@Slf4j
 class MovieServiceSpecification extends Specification {
     @Autowired
     @Subject
@@ -41,8 +43,6 @@ class MovieServiceSpecification extends Specification {
 
     String setupDataSQLScript ="/test-data/basedata.sql"
     String cleanupDataSQLScript = "/test-data/cleanup.sql"
-
-    Logger logger = LoggerFactory.getLogger(DirectorContoller.class);
 
     DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create()
 
@@ -96,19 +96,18 @@ class MovieServiceSpecification extends Specification {
             List<Movie> newMovieList = movieService.getAllMovies()
             int moviesListSize = newMovieList.size()
         then:
-            moviesListSize == originalMoviesListSize+1
+        (moviesListSize == originalMoviesListSize+1)&&(newMovieList.contains(movie))
     }
     def "Should delete a  movie"(){
         given:
         List<Movie> originalMovies = movieService.getAllMovies()
         int originalMoviesListSize = originalMovies.size()
-        Movie movie = Mocks.movie
-
-        movieService.deleteMovie(UUID.fromString("07ab22d5-67c7-45ec-953a-17ca0e1a8bd6"))
+        UUID idToDelete = UUID.fromString("07ab22d5-67c7-45ec-953a-17ca0e1a8bd6")
+        movieService.deleteMovie(idToDelete)
         when:
         List<Movie> newMovieList = movieService.getAllMovies()
         int moviesListSize = newMovieList.size()
         then:
-        moviesListSize == originalMoviesListSize-1
+        (moviesListSize == originalMoviesListSize-1)&&(movieService.getMovieById(idToDelete).isEmpty())
     }
 }
