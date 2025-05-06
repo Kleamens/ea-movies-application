@@ -26,7 +26,6 @@ import java.sql.Statement
 
 @SpringBootTest(classes = [MoviesApiApplication])
 @ActiveProfiles("test")
-@Sql(value = "/test-data/setup.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS,config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
 @Sql(value = "/test-data/final-cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS,config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
 class DirectorServiceSpecification extends Specification{
 
@@ -43,9 +42,6 @@ class DirectorServiceSpecification extends Specification{
 
      String setupDataSQLScript ="/test-data/basedata.sql"
      String cleanupDataSQLScript = "/test-data/cleanup.sql"
-//    URL setupSQLScript = getClass().getResource("/test-data/setup.sql")
-//    URL cleanupSQLScript = getClass().getResource("/test-data/final-cleanup.sql")
-
 
     DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create()
 

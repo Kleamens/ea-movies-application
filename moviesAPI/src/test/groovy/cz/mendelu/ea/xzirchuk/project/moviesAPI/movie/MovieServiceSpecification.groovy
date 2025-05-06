@@ -26,7 +26,6 @@ import javax.sql.DataSource
 
 @SpringBootTest(classes = [MoviesApiApplication])
 @ActiveProfiles("test")
-@Sql(value = "/test-data/setup.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS,config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
 @Sql(value = "/test-data/final-cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS,config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
 class MovieServiceSpecification extends Specification {
     @Autowired
@@ -74,12 +73,6 @@ class MovieServiceSpecification extends Specification {
                 databaseCleanup,
                 "Cleanup failed"
         )
-    }
-
-    void setupSpec(){
-    }
-
-    void cleanupSpec(){
     }
 
 

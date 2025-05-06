@@ -36,17 +36,16 @@ dependencies {
 
 	// testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	testImplementation 'io.rest-assured:rest-assured'
-//	testImplementation 'io.rest-assured:spring-mock-mvc'
-//	testImplementation 'org.junit.jupiter:junit-jupiter-engine'
-
-//	testImplementation 'org.hamcrest:hamcrest:2.2'
 
 	implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
 
 	testImplementation "org.codehaus.groovy:groovy-all:3.0.24"
 	testImplementation("org.spockframework:spock-spring:2.4-M6-groovy-3.0")
 	testImplementation("org.spockframework:spock-core:2.4-M6-groovy-3.0")
+
+	testImplementation 'org.testcontainers:postgresql:1.19.0'
+	testImplementation 'org.testcontainers:spock'
+
 }
 
 tasks.named('test') {
