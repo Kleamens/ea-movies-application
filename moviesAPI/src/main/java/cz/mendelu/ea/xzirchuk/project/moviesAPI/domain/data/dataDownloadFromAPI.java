@@ -1,13 +1,12 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.data;
 
+import cz.mendelu.ea.xzirchuk.project.moviesAPI.config.DownloadDataFromAPIConfiguration;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.NonUniqueResultException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,13 +25,15 @@ public class dataDownloadFromAPI {
     private final DirectorService directorService;
     private final WebClient webClient;
 
-    @Autowired
+    private final DownloadDataFromAPIConfiguration downloadDataFromAPIConfiguration;
+
     public dataDownloadFromAPI(MovieService movieService,
                                DirectorService directorService,
                                WebClient.Builder webClientBuilder,
-                               @Value("${app.download.url}") String downloadURL){
+                               DownloadDataFromAPIConfiguration downloadDataFromAPIConfiguration){
         this.movieService = movieService;
-        this.webClient = webClientBuilder.baseUrl(downloadURL).build();
+        this.downloadDataFromAPIConfiguration = downloadDataFromAPIConfiguration;
+        this.webClient = webClientBuilder.baseUrl(downloadDataFromAPIConfiguration.getDownloadUrl()).build();
         this.directorService = directorService;
     }
 
@@ -97,7 +98,7 @@ public class dataDownloadFromAPI {
         }
     }
     @Scheduled(cron = "0 0 * * * ?")
-    public void dow() {
+    public void downloadData() {
         if (movieService.getMoviePage(0,10).isEmpty()){
             downloadDataFromAPI();
         }else{
