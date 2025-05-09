@@ -2,83 +2,25 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.director
 
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.MoviesApiApplication
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorContoller
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utility.Mocks
 import groovy.util.logging.Slf4j
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.core.io.ClassPathResource
-import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.jdbc.Sql
-import org.springframework.test.context.jdbc.SqlConfig
 import spock.lang.Specification
 import spock.lang.Subject
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.utility.Utils
-
-import javax.sql.DataSource
-import java.sql.DriverManager
-import java.sql.Statement
 
 @SpringBootTest(classes = [MoviesApiApplication])
 @ActiveProfiles("test")
 @Slf4j
+@Transactional
 class DirectorServiceSpecification extends Specification{
 
     @Autowired
     @Subject
     DirectorService directorService;
-
-    @Value('${spring.datasource.url}')
-    String databaseUrl
-    @Value('${spring.datasource.username}')
-    String userName
-    @Value('${spring.datasource.password}')
-    String password
-
-     String setupDataSQLScript ="/test-data/basedata.sql"
-     String cleanupDataSQLScript = "/test-data/cleanup.sql"
-
-    DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create()
-
-
-    ResourceDatabasePopulator databaseSetup = new ResourceDatabasePopulator()
-    ResourceDatabasePopulator databaseCleanup = new ResourceDatabasePopulator()
-
-    // @Shared is the same as intializing this in the setupSpec
-    void setup(){
-        databaseSetup.addScript(new ClassPathResource(setupDataSQLScript))
-        databaseCleanup.addScript(new ClassPathResource(cleanupDataSQLScript))
-
-        Utils.execPopulator(
-                dataSourceBuilder,
-                databaseUrl,
-                userName,
-                password,
-                databaseSetup,
-                "Setup failed"
-        )
-    }
-//
-    void cleanup(){
-        Utils.execPopulator(
-                dataSourceBuilder,
-                databaseUrl,
-                userName,
-                password,
-                databaseCleanup,
-                "Cleanup failed"
-        )
-    }
-
-
-
 
     def "Should give a list of directors"(){
         given:

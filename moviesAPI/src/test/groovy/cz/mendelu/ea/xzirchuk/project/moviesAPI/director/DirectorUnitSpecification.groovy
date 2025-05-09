@@ -1,11 +1,7 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.director
 
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.MoviesApiApplication
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
 
 class DirectorUnitSpecification extends  Specification {

@@ -6,7 +6,6 @@ import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utility.Mocks
 import spock.lang.Specification
 
-import java.time.Instant
 import java.time.LocalDate
 
 class MovieUnitSpecification extends  Specification {
