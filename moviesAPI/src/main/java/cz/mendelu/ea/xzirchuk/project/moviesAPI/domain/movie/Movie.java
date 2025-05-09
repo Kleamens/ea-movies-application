@@ -71,8 +71,8 @@ public class Movie {
 
     private Float revenue;
 
-    @ManyToOne()
-    @JoinColumn(name = "director_id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "director_id" )
     @JsonIgnore
     Director director;
 
