@@ -3,12 +3,12 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.config;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+@Component
 @ConfigurationProperties(prefix = "app")
-@Configuration
 @Getter
 @Setter
-public class DownloadDataFromAPIConfiguration {
+public class DownloadDataFromAPIConfigurationProperties {
     private String downloadUrl;
 }

@@ -1,10 +1,12 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.data;
 
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.config.DownloadDataFromAPIConfiguration;
+import cz.mendelu.ea.xzirchuk.project.moviesAPI.config.DownloadDataFromAPIConfigurationProperties;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.MovieService;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.NonUniqueResultException;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,23 +21,12 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class dataDownloadFromAPI {
 
     private final MovieService movieService;
     private final DirectorService directorService;
     private final WebClient webClient;
-
-    private final DownloadDataFromAPIConfiguration downloadDataFromAPIConfiguration;
-
-    public dataDownloadFromAPI(MovieService movieService,
-                               DirectorService directorService,
-                               WebClient.Builder webClientBuilder,
-                               DownloadDataFromAPIConfiguration downloadDataFromAPIConfiguration){
-        this.movieService = movieService;
-        this.downloadDataFromAPIConfiguration = downloadDataFromAPIConfiguration;
-        this.webClient = webClientBuilder.baseUrl(downloadDataFromAPIConfiguration.getDownloadUrl()).build();
-        this.directorService = directorService;
-    }
 
     public void downloadDataFromAPI(){
         WebClient.ResponseSpec response = null;
@@ -51,8 +42,7 @@ public class dataDownloadFromAPI {
 
         FilmResponse actualClass = data.block();
 
-        assert actualClass != null;
-        
+
         for (FilmResult i : actualClass.getResult()){
            Movie insertMovie = new Movie();
 
