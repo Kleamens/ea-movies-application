@@ -44,7 +44,6 @@ public class Movie {
     private LocalDate releaseYear;
 
     @NotNull
-    @EqualsAndHashCode.Exclude
     private Instant lastModified;
 
     @NotEmpty
@@ -73,15 +72,11 @@ public class Movie {
     private Float imdbRating;
 
     @Min(0)
-
     private Float revenue;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "director_id")
     @JsonIgnore
-    @EqualsAndHashCode.Exclude
     Director director;
-
-
 
 }
