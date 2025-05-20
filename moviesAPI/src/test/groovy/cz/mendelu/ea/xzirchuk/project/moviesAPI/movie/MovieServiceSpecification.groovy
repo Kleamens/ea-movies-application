@@ -16,34 +16,18 @@ import spock.lang.Subject
 @SpringBootTest(classes = [MoviesApiApplication])
 @ActiveProfiles("test")
 @Slf4j
-@Transactional
 class MovieServiceSpecification extends Specification {
     @Autowired
     @Subject
-    MovieService movieService;
+    private MovieService movieService;
 
-    def "Should give a list of movies"(){
-        given:
-            List<Movie> movies= movieService.getAllMovies();
-        when:
-        int moviesListSize = movies.size()
-        then:
-            moviesListSize == 2
+    private Mocks mock
+
+    def setup(){
+        mock = new Mocks();
     }
 
-    def "Should create a new movie"(){
-        given:
-            List<Movie> originalMovies = movieService.getAllMovies()
-            int originalMoviesListSize = originalMovies.size()
-            Movie movie = Mocks.movie
-
-            movieService.createMovie(movie)
-        when:
-            List<Movie> newMovieList = movieService.getAllMovies()
-            int moviesListSize = newMovieList.size()
-        then:
-        (moviesListSize == originalMoviesListSize+1)&&(newMovieList.contains(movie))
-    }
+    @Transactional
     def "Should delete a  movie"(){
         given:
         List<Movie> originalMovies = movieService.getAllMovies()
@@ -56,4 +40,28 @@ class MovieServiceSpecification extends Specification {
         then:
         (moviesListSize == originalMoviesListSize-1)&&(movieService.getMovieById(idToDelete).isEmpty())
     }
+    @Transactional
+    def "Should create a new movie"(){
+        given:
+            List<Movie> originalMovies = movieService.getAllMovies()
+            int originalMoviesListSize = originalMovies.size()
+            Movie movie = mock.getMovie()
+
+
+            movieService.createMovie(movie)
+        when:
+            List<Movie> newMovieList = movieService.getAllMovies()
+            int moviesListSize = newMovieList.size()
+        then:
+        (moviesListSize == originalMoviesListSize+1)&&(newMovieList.contains(movie))
+    }
+    def "Should give a list of movies"(){
+        given:
+        List<Movie> movies= movieService.getAllMovies();
+        when:
+        int moviesListSize = movies.size()
+        then:
+        moviesListSize == 2
+    }
+
 }

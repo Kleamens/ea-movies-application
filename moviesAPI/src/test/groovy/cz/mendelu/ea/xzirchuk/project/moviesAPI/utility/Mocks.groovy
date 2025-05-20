@@ -6,13 +6,14 @@ import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie
 import java.time.Instant
 import java.time.LocalDate
 
+
 class Mocks {
-    static Director director = new Director(
+    private final Director director = new Director(
             name: "Jeff",
             net_worth: 2.0,
     )
 
-    static Movie movie = new Movie(
+    private final Movie movie = new Movie(
             title: "Test",
             releaseYear: LocalDate.of(2012,5,23),
             overview: "Test Overview",
@@ -25,4 +26,12 @@ class Mocks {
             revenue: 2.2,
             director:director,
     )
+
+    Director getDirector() {
+        return director
+    }
+
+    Movie getMovie() {
+        return movie
+    }
 }
