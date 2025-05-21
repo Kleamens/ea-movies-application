@@ -3,6 +3,7 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.director
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.MoviesApiApplication
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService
+import cz.mendelu.ea.xzirchuk.project.moviesAPI.utility.CommonSpecification
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.utility.Mocks
 import groovy.util.logging.Slf4j
 import jakarta.transaction.Transactional
@@ -13,20 +14,11 @@ import org.springframework.test.context.ActiveProfiles
 import spock.lang.Specification
 import spock.lang.Subject
 
-@SpringBootTest(classes = [MoviesApiApplication])
-@ActiveProfiles("test")
-@Slf4j
-class DirectorServiceSpecification extends Specification{
+class DirectorServiceSpecification extends CommonSpecification{
 
     @Autowired
     @Subject
     private DirectorService directorService;
-
-    private Mocks mock
-
-    def setup(){
-        mock = new Mocks();
-    }
 
 
     @Transactional
@@ -40,28 +32,26 @@ class DirectorServiceSpecification extends Specification{
         List<Director> newDirectors = directorService.getAllDirectors()
         int directorsListSize = newDirectors.size()
         then:
-        (directorsListSize == originalDirectorListSize-1)&&(directorService.getDirectorById(idToDelete).isEmpty())
+        (directorsListSize == originalDirectorListSize-1)
+                &&(directorService.getDirectorById(idToDelete).isEmpty())
     }
     @Transactional
     def "Should create a new director"(){
         given:
         List<Director> originalDirectors = directorService.getAllDirectors()
         int originalDirectorListSize = originalDirectors.size()
-        Director director =mock.getDirector()
+        Director director =super.mock.getDirector()
         directorService.createDirector(director)
         when:
         List<Director> newDirectors = directorService.getAllDirectors()
         int directorsListSize = newDirectors.size()
         then:
-        (directorsListSize == originalDirectorListSize+1)&&(newDirectors.contains(director))
+        (directorsListSize == originalDirectorListSize+1)
+                &&(newDirectors.contains(director))
         }
     def "Should give a list of directors"(){
-        given:
-        List<Director> directors= directorService.getAllDirectors();
-        when:
-        int directorsListSize = directors.size()
-        then:
-        directorsListSize == 2
+        expect:
+        directorService.getAllDirectors().size()==2;
     }
 
 

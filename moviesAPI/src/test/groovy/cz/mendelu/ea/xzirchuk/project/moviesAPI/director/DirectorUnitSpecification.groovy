@@ -2,27 +2,23 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.director
 
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie
+import cz.mendelu.ea.xzirchuk.project.moviesAPI.utility.CommonSpecification
 import spock.lang.Specification
 
-class DirectorUnitSpecification extends  Specification {
+class DirectorUnitSpecification extends  CommonSpecification {
 
 
 
 
     def "Creating a director should create a director"(){
-        given:
+        expect:
             Director director = new Director(
                     name: "Jeff",
                     net_worth: 2.0,
                     movieList: []
             )
-        when:
-            String directorName = director.getName()
-            Float directorNetWorth = director.getNet_worth()
-            List<Movie> directorFilmography = director.getMovieList()
-        then:
-            directorName=="Jeff"
-            directorNetWorth==2.0
-            directorFilmography==[]
+            director.getName()=="Jeff"
+            director.getNet_worth()==2.0
+            director.getMovieList()==[]
     }
 }

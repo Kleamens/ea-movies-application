@@ -43,6 +43,7 @@ public class Director {
 
     @OneToMany(mappedBy = "director",cascade = {CascadeType.REMOVE,CascadeType.PERSIST})
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     List<Movie> movieList;
 
 

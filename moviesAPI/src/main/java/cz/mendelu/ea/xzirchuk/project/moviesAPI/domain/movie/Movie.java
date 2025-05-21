@@ -44,6 +44,7 @@ public class Movie {
     private LocalDate releaseYear;
 
     @NotNull
+    @EqualsAndHashCode.Exclude
     private Instant lastModified;
 
     @NotEmpty
