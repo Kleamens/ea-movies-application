@@ -3,17 +3,22 @@ package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.EqualsExclude;
-import org.apache.commons.lang3.builder.HashCodeExclude;
+import lombok.EqualsAndHashCode;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -24,11 +29,10 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 public class Movie {
 
     @Id
-    @HashCodeExclude
-    @EqualsExclude
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
@@ -40,6 +44,7 @@ public class Movie {
     private LocalDate releaseYear;
 
     @NotNull
+    @EqualsAndHashCode.Exclude
     private Instant lastModified;
 
     @NotEmpty
@@ -68,14 +73,11 @@ public class Movie {
     private Float imdbRating;
 
     @Min(0)
-
     private Float revenue;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "director_id")
     @JsonIgnore
     Director director;
-
-
 
 }

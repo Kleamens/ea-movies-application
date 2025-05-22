@@ -14,9 +14,10 @@ import jakarta.persistence.CascadeType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +27,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Director {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -39,9 +41,11 @@ public class Director {
     @Min(1)
     private Float net_worth;
 
-    @OneToMany(mappedBy = "director",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "director",cascade = {CascadeType.REMOVE,CascadeType.PERSIST})
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     List<Movie> movieList;
 
-//todo find director by name
+
+    //todo find director by name
 }
