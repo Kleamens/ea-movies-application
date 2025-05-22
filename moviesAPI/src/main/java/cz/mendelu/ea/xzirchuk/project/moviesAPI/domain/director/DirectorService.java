@@ -33,6 +33,9 @@ public class DirectorService {
     public Optional<Director> getDirectorById(UUID id){
         return directorRepository.findById(id);
     }
+    public Optional<Director> getDirectorByName(String name) {
+        return directorRepository.getDirectorByName(name);
+    }
 
     public Director createDirector(Director director){
         return directorRepository.save(director);

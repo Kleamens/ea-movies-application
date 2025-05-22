@@ -45,6 +45,10 @@ public class MovieService {
         return movieRepository.save(movie);
     }
 
+    public Optional<Movie> getMovieByTitle(String title){
+        return movieRepository.getMovieByTitle(title);
+    }
+
 
     public Movie updateMovie(UUID id, Movie movie) {
         movie.setId(id);
