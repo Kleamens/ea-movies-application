@@ -1,6 +1,7 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -8,12 +9,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 @RequiredArgsConstructor
 public class DownloadConfiguration {
-    private final DownloadDataFromAPIConfigurationProperties downloadDataFromAPIConfigurationProperties;
+    @ConfigurationProperties(prefix = "app")
+    @Bean
+    public DownloadDataFromAPIConfigurationProperties getconfigurationProperties(){
+        return new DownloadDataFromAPIConfigurationProperties();
+    }
 
 
     @Bean
     public WebClient getWebClient() {
-        return WebClient.builder().baseUrl(downloadDataFromAPIConfigurationProperties.getDownloadUrl()).build();
+        return WebClient.builder().baseUrl(getconfigurationProperties().getDownloadUrl()).build();
     }
 
 }

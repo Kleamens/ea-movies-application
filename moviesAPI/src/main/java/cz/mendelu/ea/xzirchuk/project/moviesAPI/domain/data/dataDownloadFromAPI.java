@@ -40,8 +40,13 @@ public class dataDownloadFromAPI {
             log.error("failed to retrieve web resource : {}", ex.getMessage());
         }
 
-        FilmResponse actualClass = data.block();
 
+        FilmResponse actualClass = null;
+        try{
+            actualClass = data.block();
+        }catch (NullPointerException ex){
+            log.error("failed to retrieve web resource : {}", ex.getMessage());
+        }
 
         for (FilmResult i : actualClass.getResult()){
            Movie insertMovie = new Movie();
@@ -72,19 +77,15 @@ public class dataDownloadFromAPI {
            insertMovie.setMetaScore(89);
            insertMovie.setLastModified(Instant.parse(i.getProperties().getEdited()));
 
-
-           movieService.createMovie(insertMovie);
-            Optional<Movie> insertedMovie;
            try{
-                insertedMovie = movieService.getMovieByTitle(insertMovie.getTitle());
-           }catch (NonUniqueResultException ex){
-               continue;
+                movieService.createMovie(insertMovie);
+            }catch (NonUniqueResultException ex){
+               log.error("Could not create Movie: Unique constraint prevent creation");
            }
 
-           if(insertedMovie.isPresent()){
-               insertedMovie.get().setDirector(director);
-               movieService.updateMovie(insertedMovie.get().getId(), insertedMovie.get());
-           }
+            insertMovie.setDirector(director);
+           movieService.updateMovie(insertMovie.getId(),insertMovie);
+
         }
     }
     @Scheduled(cron = "0 0 * * * ?")
