@@ -1,6 +1,5 @@
 package cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.data;
 
-import cz.mendelu.ea.xzirchuk.project.moviesAPI.config.DownloadDataFromAPIConfigurationProperties;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.Director;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.director.DirectorService;
 import cz.mendelu.ea.xzirchuk.project.moviesAPI.domain.movie.Movie;
@@ -41,11 +40,10 @@ public class dataDownloadFromAPI {
         }
 
 
-        FilmResponse actualClass = null;
-        try{
-            actualClass = data.block();
-        }catch (NullPointerException ex){
-            log.error("failed to retrieve web resource : {}", ex.getMessage());
+        FilmResponse actualClass = data.block();
+        if (actualClass == null) {
+            log.error("failed to retrieve data from web resource");
+            return;
         }
 
         for (FilmResult i : actualClass.getResult()){
@@ -54,6 +52,7 @@ public class dataDownloadFromAPI {
            Optional<Director> optionalDirector = directorService.getDirectorByName(i.getProperties().getDirector());
 
            Director director;
+
            if (optionalDirector.isPresent()) {
                director = optionalDirector.get();
            } else {
@@ -61,10 +60,10 @@ public class dataDownloadFromAPI {
                director.setName(i.getProperties().getDirector());
                director.setNet_worth(5.0f);
 
-               directorService.createDirector(director);
+               director = directorService.createDirector(director);
            }
 
-
+            insertMovie.setDirector(director);
 
            insertMovie.setCertificate("E");
            insertMovie.setGenre("Sci-Fi");
@@ -83,8 +82,6 @@ public class dataDownloadFromAPI {
                log.error("Could not create Movie: Unique constraint prevent creation");
            }
 
-            insertMovie.setDirector(director);
-           movieService.updateMovie(insertMovie.getId(),insertMovie);
 
         }
     }

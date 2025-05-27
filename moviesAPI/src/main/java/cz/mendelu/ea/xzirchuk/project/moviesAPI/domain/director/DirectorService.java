@@ -43,8 +43,6 @@ public class DirectorService {
 
 
     public Director updateDirector(UUID id, Director director) {
-//        director.setId(id);
-
         return directorRepository.save(director);
     }
 
