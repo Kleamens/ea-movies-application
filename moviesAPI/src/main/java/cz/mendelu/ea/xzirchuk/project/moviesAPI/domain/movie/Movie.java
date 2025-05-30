@@ -75,7 +75,7 @@ public class Movie {
     @Min(0)
     private Float revenue;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "director_id")
     @JsonIgnore
     Director director;
