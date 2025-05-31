@@ -50,7 +50,6 @@ public class MovieContoller {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of movies"),
             @ApiResponse(responseCode = "400",description = "Either the value in page number or page size parametrs negative or not integers"),
-            @ApiResponse(responseCode = "404",description = "The resulting list of movies is empty , most likely because the page number is too high")
     })
     public MoviesResponse getMoviesPage(@RequestParam int pageNumber,@RequestParam int pageSize) {
         List<Movie> movies = new ArrayList<>();
@@ -61,10 +60,6 @@ public class MovieContoller {
         } catch (NumberFormatException e) {
             throw new BadInputException("AAAAAAAAAAAA");
 
-        }
-
-        if (movies.isEmpty()) {
-            throw new NotFoundException(DEFAULT_NOT_FOUND);
         }
 
         return new MoviesResponse(movies);

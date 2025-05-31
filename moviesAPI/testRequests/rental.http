@@ -1,0 +1,21 @@
+### GET A RENTAL PAGE
+GET http://localhost:8080/rental/?pageSize=20&pageNumber=0
+
+### CREATE A NEW RENTAL
+POST http://localhost:8080/rental/
+Content-Type: application/json
+
+{
+  "rentalStartDate": "2025-04-01",
+  "expectedMovieReturnDate": "2025-04-08",
+  "actualMovieReturnDate": null,
+  "userId": "ce69a41b-da7d-4f65-97ff-f5bff832c783",
+  "movieId": "07ab22d5-67c7-45ec-953a-17ca0e1a8bd6"
+}
+
+### FINISH RENTAL
+PUT http://localhost:8080/rental/finishRental?movieId=07ab22d5-67c7-45ec-953a-17ca0e1a8bd6
+Accept: application/json
+
+### DELETE RENTAl BY ID
+DELETE http://localhost:8080/rental/4f130419-27c6-4fe9-b83f-12df48b2ec70
